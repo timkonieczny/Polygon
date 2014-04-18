@@ -17,7 +17,7 @@ public class Triangle extends Shape {
          1.0f, -1.0f, 0.0f // bottom right
         };
 
-        initializeBuffers(theme, 1);
+        initializeBuffers(theme, 2);
     }
 
     public void draw(GL10 gl10) {

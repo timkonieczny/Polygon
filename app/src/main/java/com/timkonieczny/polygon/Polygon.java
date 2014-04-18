@@ -41,7 +41,7 @@ public class Polygon extends Shape{
         mCoords[mCoords.length-2]= mCoords[4];
         mCoords[mCoords.length-1]= mCoords[5];
 
-        initializeBuffers(theme, 1);
+        initializeBuffers(theme, 0);
     }
 
     public void draw(GL10 gl10) {

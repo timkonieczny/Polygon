@@ -75,9 +75,10 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         outerThemeIndex = innerThemeIndex =0;
         chooseTheme();
+        System.out.println("inner theme: "+innerThemeIndex+" outer theme: "+outerThemeIndex);//        inneres                                         äußeres
         mPolygons=new Polygon[]{new Polygon(mScreenRatio, mThemes[innerThemeIndex]), new Polygon(mScreenRatio, mThemes[outerThemeIndex])};    // TODO: color rotation
-        mTriangle = new Triangle(mScreenRatio, mThemes[innerThemeIndex]);
-        mObstacle = new Obstacle(mScreenRatio, 0.5f, mThemes[innerThemeIndex]); // pieSize=1 equals half a circle
+        mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex]);
+        mObstacle = new Obstacle(mScreenRatio, 0.5f, mThemes[outerThemeIndex]); // pieSize=1 equals half a circle
     }
 
     @Override
