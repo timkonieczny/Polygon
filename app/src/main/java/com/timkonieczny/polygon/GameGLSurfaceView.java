@@ -1,9 +1,7 @@
 package com.timkonieczny.polygon;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
-import android.os.Build;
 import android.view.MotionEvent;
 
 public class GameGLSurfaceView extends GLSurfaceView{

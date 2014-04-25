@@ -58,11 +58,11 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         mThemes = new ColorTheme[]{
                 new ColorTheme(
                         new float[]{1.0f, 1.0f, 1.0f, 1.0f},    // white circle
-                        new float[]{0.0f, 0.0f, 1.0f, 1.0f},    // blue obstacle
-                        new float[]{1.0f, 1.0f, 0.0f, 1.0f}     // yellow triangle
+                        new float[]{0.0f, 0.0f, 1.0f, 1.0f},    // blue obstacle obstacles
+                        new float[]{1.0f, 1.0f, 0.0f, 1.0f}     // yellow triangle triangle
                 ),
                 new ColorTheme(
-                        new float[]{1.0f, 0.0f, 0.0f, 1.0f},    // red
+                        new float[]{1.0f, 0.0f, 0.0f, 1.0f},    // red      inner and outer
                         new float[]{1.0f, 1.0f, 0.0f, 1.0f},    // yellow
                         new float[]{0.0f, 0.0f, 0.0f, 1.0f}     // black
                 ),
@@ -77,6 +77,8 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         chooseTheme();
         System.out.println("inner theme: "+innerThemeIndex+" outer theme: "+outerThemeIndex);//        inneres                                         äußeres
         mPolygons=new Polygon[]{new Polygon(mScreenRatio, mThemes[innerThemeIndex]), new Polygon(mScreenRatio, mThemes[outerThemeIndex])};    // TODO: color rotation
+        System.out.println("[inner: r=]"+mThemes[innerThemeIndex].theme[0][0]+" g="+mThemes[innerThemeIndex].theme[0][1]+" b="+mThemes[innerThemeIndex].theme[0][2]+" a="+mThemes[innerThemeIndex].theme[0][3]);
+        System.out.println("[outer: r=]"+mThemes[outerThemeIndex].theme[0][0]+" g="+mThemes[outerThemeIndex].theme[0][1]+" b="+mThemes[outerThemeIndex].theme[0][2]+" a="+mThemes[outerThemeIndex].theme[0][3]);
         mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex]);
         mObstacle = new Obstacle(mScreenRatio, 0.5f, mThemes[outerThemeIndex]); // pieSize=1 equals half a circle
     }
