@@ -48,6 +48,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         gl10.glMatrixMode(GL10.GL_MODELVIEW);
 
         TSLF =0;
+        mTimeBeforeDrawing=0;
         mElapsedTime=0;
         mFirstFrame=true;
         innerCircleIndex = 0;
@@ -75,10 +76,8 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         outerThemeIndex = innerThemeIndex =0;
         chooseTheme();
-        System.out.println("inner theme: "+innerThemeIndex+" outer theme: "+outerThemeIndex);//        inneres                                         äußeres
-        mPolygons=new Polygon[]{new Polygon(mScreenRatio, mThemes[innerThemeIndex]), new Polygon(mScreenRatio, mThemes[outerThemeIndex])};    // TODO: color rotation
-        System.out.println("[inner: r=]"+mThemes[innerThemeIndex].theme[0][0]+" g="+mThemes[innerThemeIndex].theme[0][1]+" b="+mThemes[innerThemeIndex].theme[0][2]+" a="+mThemes[innerThemeIndex].theme[0][3]);
-        System.out.println("[outer: r=]"+mThemes[outerThemeIndex].theme[0][0]+" g="+mThemes[outerThemeIndex].theme[0][1]+" b="+mThemes[outerThemeIndex].theme[0][2]+" a="+mThemes[outerThemeIndex].theme[0][3]);
+
+        mPolygons=new Polygon[]{new Polygon(mScreenRatio, mThemes[innerThemeIndex]), new Polygon(mScreenRatio, mThemes[outerThemeIndex])};
         mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex]);
         mObstacle = new Obstacle(mScreenRatio, 0.5f, mThemes[outerThemeIndex]); // pieSize=1 equals half a circle
     }
@@ -86,8 +85,11 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     @Override
     public void onDrawFrame(GL10 gl10) {
         gl10.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
         TSLF =SystemClock.elapsedRealtime()- mTimeBeforeDrawing;
+
+        if(TSLF>=100){      // fix for massive frame bumps right after onCreate() is being called
+            TSLF=20;        // TODO: different value for different performances?
+        }
         mTimeBeforeDrawing=SystemClock.elapsedRealtime();
 
         if(!mFirstFrame) {
