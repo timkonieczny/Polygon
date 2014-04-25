@@ -14,7 +14,7 @@ public class Obstacle extends Shape{
 
     private float mScalingFactor;
 
-    public Obstacle(float screenRatio, float pieSize, ColorTheme theme){
+    public Obstacle(float screenRatio, float pieSize, ColorTheme theme, float angleOffset){
         super(screenRatio);
         mAngle=0.0f;
         mPoints=(int)(pieSize*50);
@@ -32,7 +32,7 @@ public class Obstacle extends Shape{
 
         for (int i= 0; i<mCoords.length; i+= mCoordsPerVertex*2) {
 
-            mSectionOfPi = j*(double)1/(mPoints)*pieSize*(2*Math.PI);
+            mSectionOfPi = j*(double)1/mPoints*pieSize*(2*Math.PI);
             j++;
 
             mCoords[i] = (float) (innerRadius*Math.cos(mSectionOfPi));
@@ -52,6 +52,7 @@ public class Obstacle extends Shape{
 
         initializeBuffers(theme, 1);
     }
+
     public void draw(GL10 gl10) {
         if(GLRenderer.SCREEN_TOUCHED) {
             if (GLRenderer.X <= 0) {
