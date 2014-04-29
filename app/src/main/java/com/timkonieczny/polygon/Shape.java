@@ -24,7 +24,7 @@ public class Shape {
         scalingFactor=0.0f;
     }
 
-    public void refreshColor(ColorTheme theme, int shapeIndex){
+    public void updateColor(ColorTheme theme, int shapeIndex){
 
         r = theme.theme[shapeIndex][0];
         g = theme.theme[shapeIndex][1];
@@ -49,7 +49,7 @@ public class Shape {
         mColorByteBuffer = ByteBuffer.allocateDirect(16*mCoords.length/3);
         mColorByteBuffer.order(ByteOrder.nativeOrder());
         mColorBuffer = mColorByteBuffer.asFloatBuffer();
-        refreshColor(theme, shapeIndex);
+        updateColor(theme, shapeIndex);
         mColorBuffer.position(0);
     }
 }

@@ -24,12 +24,23 @@ public class ObstacleSet {
                 mObstacles[2]=new Obstacle(screenRatio, 1.0f, theme, 0);
                 mObstacles[3]=new Obstacle(screenRatio, 1.0f, theme, 0);
                 break;
+            case 2:
+                mObstacles = new Obstacle[]{
+                        new Obstacle(screenRatio, 0.5f, theme, 0.0f),
+                        new Obstacle(screenRatio, 0.5f, theme, 90.0f),
+                };
         }
     }
 
     protected void draw(GL10 gl10){
         for(int i=0; i<mObstacles.length; i++){
             mObstacles[i].draw(gl10);
+        }
+    }
+
+    protected void updateColor(ColorTheme theme){
+        for(int i=0; i<mObstacles.length; i++){
+            mObstacles[i].updateColor(theme, 1);
         }
     }
 }

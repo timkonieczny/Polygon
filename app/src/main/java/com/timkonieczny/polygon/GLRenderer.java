@@ -12,7 +12,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
     private float mScreenRatio;
 
-    private Thread mPolygonThread;
+    private Thread mPolygonThread1, mPolygonThread2;
 
     public static boolean SCREEN_TOUCHED;
     protected static float X;              // OpenGL Coordinate System
@@ -25,8 +25,8 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
     private Polygon[] mPolygons;
     private Triangle mTriangle;
-    private Obstacle[] mObstacles;
     private ColorTheme[] mThemes;
+    private ObstacleSet[] mObstacleSets;
 
     private Random random;
 
@@ -65,15 +65,26 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         random = new Random();
         chooseTheme();
 
-        mPolygonThread=new Thread(  //TODO: individual threads for every polygon
+        mPolygons=new Polygon[2];
+
+        mPolygonThread1=new Thread(
             new Runnable(){
                 public void run(){
-                    mPolygons=new Polygon[]{new Polygon(mScreenRatio, mThemes[innerThemeIndex]), new Polygon(mScreenRatio, mThemes[outerThemeIndex])};
+                    mPolygons[0]=new Polygon(mScreenRatio, mThemes[innerThemeIndex]);
                 }
             }
         );
 
-        mPolygonThread.start();
+        mPolygonThread2=new Thread(
+                new Runnable(){
+                    public void run(){
+                        mPolygons[1]=new Polygon(mScreenRatio, mThemes[outerThemeIndex]);
+                    }
+                }
+        );
+
+        mPolygonThread1.start();
+        mPolygonThread2.start();
 
         gl10.glMatrixMode(GL10.GL_PROJECTION);
         gl10.glLoadIdentity();
@@ -89,7 +100,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         innerCircleIndex = 0;
 
         mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex]);
-        mObstacles=new Obstacle[]{new Obstacle(mScreenRatio, 0.5f, mThemes[outerThemeIndex], 0)};  // pieSize=1 equals half a circle
+        mObstacleSets=new ObstacleSet[]{new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 2)};
     }
 
     @Override
@@ -115,14 +126,15 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                 mPolygons[innerCircleIndex].scalingFactor=0.0f;
 
                 chooseTheme();
-                mPolygons[innerCircleIndex].refreshColor(mThemes[innerThemeIndex], 0);
-                mObstacles[0].refreshColor(mThemes[outerThemeIndex], 1);
-                mTriangle.refreshColor(mThemes[outerThemeIndex], 2);
+                mPolygons[innerCircleIndex].updateColor(mThemes[innerThemeIndex], 0);
+                mObstacleSets[0].updateColor(mThemes[outerThemeIndex]);
+                mTriangle.updateColor(mThemes[outerThemeIndex], 2);
             }
         }else{
             mFirstFrame=false;
             try {
-                mPolygonThread.join();
+                mPolygonThread1.join();
+                mPolygonThread2.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -138,7 +150,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         mTriangle.draw(gl10);
 
-        mObstacles[0].draw(gl10);
+        mObstacleSets[0].draw(gl10);
     }
 
     private void chooseTheme(){

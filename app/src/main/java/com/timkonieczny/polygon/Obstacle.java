@@ -16,7 +16,7 @@ public class Obstacle extends Shape{
 
     public Obstacle(float screenRatio, float pieSize, ColorTheme theme, float angleOffset){
         super(screenRatio);
-        mAngle=0.0f;
+        mAngle=angleOffset;
         mPoints=(int)(pieSize*50);
         double innerRadius=1.0;
         double outerRadius=1.2;
@@ -28,27 +28,37 @@ public class Obstacle extends Shape{
         }
 
         mCoords = new float[(mPoints) * mCoordsPerVertex];
-        int j=1;
+        int j=0;
 
-        for (int i= 0; i<mCoords.length; i+= mCoordsPerVertex*2) {
+        for (int i= 0; i<mCoords.length-6; i+= mCoordsPerVertex*2) {
 
-            mSectionOfPi = j*(double)1/mPoints*pieSize*(2*Math.PI);
+            mSectionOfPi = j*(double)1/(mPoints-2)*pieSize*(2*Math.PI);
             j++;
+//            System.out.println(mSectionOfPi);
 
-            mCoords[i] = (float) (innerRadius*Math.cos(mSectionOfPi));
-            mCoords[i+3] = (float) (outerRadius*Math.cos(mSectionOfPi));
+            mCoords[i] = (float) (innerRadius*Math.cos(mSectionOfPi));      // x
+            mCoords[i+3] = (float) (outerRadius*Math.cos(mSectionOfPi));    // x
 
             if(mCoords[i]==(float)-innerRadius|| mCoords[i]==(float)innerRadius){        //Regelung für Spezialfälle von cos() und sin()
-                mCoords[i+1] = 0.0f;
-                mCoords[i+4] = 0.0f;
+                mCoords[i+1] = 0.0f;    // y
+                mCoords[i+4] = 0.0f;    // y
             }else {
-                mCoords[i+1] = (float) (innerRadius*Math.sin(mSectionOfPi));
-                mCoords[i+4] = (float) (outerRadius*Math.sin(mSectionOfPi));
+                mCoords[i+1] = (float) (innerRadius*Math.sin(mSectionOfPi));    // y
+                mCoords[i+4] = (float) (outerRadius*Math.sin(mSectionOfPi));    // y
             }
 
-            mCoords[i+2] = 0.0f;
-            mCoords[i+5] = 0.0f;
+            mCoords[i+2] = 0.0f;    // z
+            mCoords[i+5] = 0.0f;    // z
+
+            System.out.println("x1="+mCoords[i]+" x2="+mCoords[i+3]+" y1="+mCoords[i+1]+" y2="+mCoords[i+4]+" z1="+mCoords[i+2]+" z2="+mCoords[i+5]);
         }
+
+        mCoords[mCoords.length-6]=(float) (innerRadius*Math.cos(j*(double)1/(mPoints-2)*pieSize*(2*Math.PI)));      // x    Letztes Koordinatenpaar
+        mCoords[mCoords.length-3]=(float) (outerRadius*Math.cos(j*(double)1/(mPoints-2)*pieSize*(2*Math.PI)));      // x
+        mCoords[mCoords.length-5]=1.0f; //y
+        mCoords[mCoords.length-2]=1.2f; //y
+        mCoords[mCoords.length-4]=0.0f; //z
+        mCoords[mCoords.length-1]=0.0f; //z
 
         initializeBuffers(theme, 1);
     }
