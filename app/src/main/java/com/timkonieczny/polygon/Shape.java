@@ -6,19 +6,23 @@ import java.nio.FloatBuffer;
 
 public class Shape {
 
+    protected final int coordsPerVertex;
+
     protected float r,g,b,a;
     protected FloatBuffer mColorBuffer;
     protected float mCoords[];
 
     protected FloatBuffer mVertexBuffer;
-    protected ByteBuffer mVertexByteBuffer;
-    protected ByteBuffer mColorByteBuffer;
+    private ByteBuffer mVertexByteBuffer;
+    private ByteBuffer mColorByteBuffer;
 
     protected float scalingFactor;
     protected final float screenRatio;
     protected final float fullExpansion;   // scaling factor for circle expanding over entire screen
+    protected boolean isExpanded;
 
     public Shape(float screenRatio){
+        coordsPerVertex=3;
         this.screenRatio =screenRatio;
         fullExpansion =(float)Math.sqrt((double)(2.0f+4* this.screenRatio * this.screenRatio -4* this.screenRatio));
         scalingFactor=0.0f;

@@ -6,38 +6,29 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Polygon extends Shape{
 
-    private final int mCoordsPerVertex = 3;
-
-
     private int mPoints = 52;   // 50 vertices + center + first vertex as start and ending (2x)
-    private double mSectionOfPi;
-
-    protected boolean expand;
 
     public Polygon(float screenRatio, ColorTheme theme) {
         super(screenRatio);
 
-        expand =false;
-
-
-        mCoords = new float[(mPoints) * mCoordsPerVertex];
+        mCoords = new float[(mPoints) * coordsPerVertex];
         int j=1;
 
-        for (int i= mCoordsPerVertex; i<=(mPoints-2)*3; i+= mCoordsPerVertex) {
-            mSectionOfPi = j*(double)1/(mPoints-2)*2*Math.PI;
+        for (int i= coordsPerVertex; i<=(mPoints-2)*3; i+= coordsPerVertex) {
+            double sectionOfPi = j * (double) 1 / (mPoints - 2) * 2 * Math.PI;
             j++;
 
-            mCoords[i] = (float) Math.cos(mSectionOfPi);
-            if(mCoords[i]==-1.0f|| mCoords[i]==1.0f){        //Regelung für Spezialfälle von cos() und sin()
+            mCoords[i] = (float) Math.cos(sectionOfPi);
+            if(mCoords[i]==-1.0f|| mCoords[i]==1.0f){        // special cases of cos() und sin()
                 mCoords[i+1] = 0.0f;
             }else {
-                mCoords[i+1] = (float) Math.sin(mSectionOfPi);
+                mCoords[i+1] = (float) Math.sin(sectionOfPi);
             }
             mCoords[i+2] = 0.0f;
 
         }
 
-        mCoords[mCoords.length-3]= mCoords[3];     //Endpunkt ist der Startpunkt
+        mCoords[mCoords.length-3]= mCoords[3];     // first coordinate==last coordinate
         mCoords[mCoords.length-2]= mCoords[4];
         mCoords[mCoords.length-1]= mCoords[5];
 
@@ -45,12 +36,12 @@ public class Polygon extends Shape{
     }
 
     public void draw(GL10 gl10) {
-        if(expand) {
+        if(!isExpanded) {
             if (scalingFactor < fullExpansion) {
                 scalingFactor += GLRenderer.TSLF*0.001;
             } else {
                 gl10.glClearColor(r, g, b, a);
-                expand = false;
+                isExpanded = true;
             }
         }
 

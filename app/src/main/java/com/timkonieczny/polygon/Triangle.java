@@ -6,8 +6,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Triangle extends Shape {
 
-    private final int mCoordsPerVertex = 3;
-
     public Triangle(float screenRatio, ColorTheme theme) {
         super(screenRatio);
 
@@ -31,7 +29,7 @@ public class Triangle extends Shape {
         gl10.glShadeModel(GL10.GL_FLAT);
         gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
         gl10.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
-        gl10.glVertexPointer(mCoordsPerVertex, GL10.GL_FLOAT, 0, mVertexBuffer);
-        gl10.glDrawArrays(GL10.GL_TRIANGLES, 0, mCoords.length / mCoordsPerVertex);
+        gl10.glVertexPointer(coordsPerVertex, GL10.GL_FLOAT, 0, mVertexBuffer);
+        gl10.glDrawArrays(GL10.GL_TRIANGLES, 0, mCoords.length / coordsPerVertex);
     }
 }

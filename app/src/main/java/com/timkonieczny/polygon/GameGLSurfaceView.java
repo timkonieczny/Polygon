@@ -4,19 +4,18 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
+import org.jetbrains.annotations.NotNull;
+
 public class GameGLSurfaceView extends GLSurfaceView{
 
-    private GLRenderer mRenderer;
     private int mWidth;
     private int mHeight;
-    private float mCurrentX;
-    private float mCurrentY;
 
     public GameGLSurfaceView(Context context){
         super(context);
 
-        mRenderer = new GLRenderer();
-        setRenderer(mRenderer);
+        GLRenderer renderer = new GLRenderer();
+        setRenderer(renderer);
 
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
@@ -28,22 +27,22 @@ public class GameGLSurfaceView extends GLSurfaceView{
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent e) {
+    public boolean onTouchEvent(@NotNull MotionEvent e) {
         if (e.getActionMasked()==MotionEvent.ACTION_DOWN){
             GLRenderer.SCREEN_TOUCHED =true;
 
-            mCurrentX=e.getX();
-            mCurrentY=e.getY();
-            if(mCurrentX<mWidth/2){
-                GLRenderer.X =-1+(2*mCurrentX/mWidth);
+            float currentX = e.getX();
+            float currentY = e.getY();
+            if(currentX <mWidth/2){
+                GLRenderer.X =-1+(2* currentX /mWidth);
             }else{
-                GLRenderer.X =(2*mCurrentX/mWidth)-1;
+                GLRenderer.X =(2* currentX /mWidth)-1;
             }
 
-            if(mCurrentY<mHeight/2){
-                GLRenderer.Y =1-(2*mCurrentY/mHeight);
+            if(currentY <mHeight/2){
+                GLRenderer.Y =1-(2* currentY /mHeight);
             }else{
-                GLRenderer.Y =1-(2*mCurrentY/mHeight);
+                GLRenderer.Y =1-(2* currentY /mHeight);
             }
 
             return true;

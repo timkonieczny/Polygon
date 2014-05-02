@@ -27,6 +27,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     private Triangle mTriangle;
     private ColorTheme[] mThemes;
     private ObstacleSet[] mObstacleSets;
+    private int mObstacleSetIndex;
 
     private Random random;
 
@@ -100,7 +101,13 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         innerCircleIndex = 0;
 
         mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex]);
-        mObstacleSets=new ObstacleSet[]{new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 2)};
+        mObstacleSets=new ObstacleSet[]{
+                new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 0),
+                new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 1),
+                new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 2)
+        };
+
+        mObstacleSetIndex=0;
     }
 
     @Override
@@ -117,7 +124,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             mElapsedTime+= TSLF;
             if (mElapsedTime >= 10000) {
                 mElapsedTime = 0;
-                mPolygons[innerCircleIndex].expand =true;
+                mPolygons[innerCircleIndex].isExpanded =false;
                 if(innerCircleIndex ==0) {
                     innerCircleIndex = 1;
                 }else {
@@ -127,7 +134,10 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
                 chooseTheme();
                 mPolygons[innerCircleIndex].updateColor(mThemes[innerThemeIndex], 0);
-                mObstacleSets[0].updateColor(mThemes[outerThemeIndex]);
+                for(ObstacleSet i: mObstacleSets){
+                    i.updateColor(mThemes[outerThemeIndex]);
+                }
+
                 mTriangle.updateColor(mThemes[outerThemeIndex], 2);
             }
         }else{
@@ -150,7 +160,17 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         mTriangle.draw(gl10);
 
-        mObstacleSets[0].draw(gl10);
+        if(mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1].isExpanded){
+
+            mObstacleSets[mObstacleSetIndex].resetValues();
+            if(mObstacleSetIndex<2) {
+                mObstacleSetIndex++;
+            }else{
+                mObstacleSetIndex=0;
+            }
+        }
+
+        mObstacleSets[mObstacleSetIndex].draw(gl10);
     }
 
     private void chooseTheme(){

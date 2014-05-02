@@ -1,13 +1,10 @@
 package com.timkonieczny.polygon;
 
-import android.content.Context;
 import android.opengl.GLSurfaceView;
-import android.os.PowerManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import javax.microedition.khronos.opengles.GL10;
 
 public class MainActivity extends ActionBarActivity {
 
