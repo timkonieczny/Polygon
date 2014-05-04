@@ -1,6 +1,7 @@
 package com.timkonieczny.polygon;
 
 import android.opengl.GLU;
+import android.util.Log;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -88,6 +89,11 @@ public class Obstacle extends Shape{
                 }
             }else{
                 isExpanded =true;
+            }
+
+            if(scalingFactor>0.8f&&scalingFactor<1.0f&&mAngle<280.0f&&mAngle>90.0f){    // collision
+                Log.d("collision","angle="+mAngle);
+                // TODO: game over
             }
 
             gl10.glLoadIdentity();   // reset the matrix to its default state

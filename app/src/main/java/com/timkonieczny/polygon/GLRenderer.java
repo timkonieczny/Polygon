@@ -77,11 +77,11 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         );
 
         mPolygonThread2=new Thread(
-                new Runnable(){
-                    public void run(){
-                        mPolygons[1]=new Polygon(mScreenRatio, mThemes[outerThemeIndex]);
-                    }
+            new Runnable(){
+                public void run(){
+                    mPolygons[1]=new Polygon(mScreenRatio, mThemes[outerThemeIndex]);
                 }
+            }
         );
 
         mPolygonThread1.start();
@@ -101,7 +101,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         innerCircleIndex = 0;
 
         mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex]);
-        mObstacleSets=new ObstacleSet[]{
+        mObstacleSets=new ObstacleSet[]{    // TODO: add threading...
                 new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 0),
                 new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 1),
                 new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 2)
