@@ -2,6 +2,7 @@ package com.timkonieczny.polygon;
 
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -12,7 +13,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
     private float mScreenRatio;
 
-    private Thread mPolygonThread1, mPolygonThread2;
+    private Thread[] mPolygonThreads, mObstacleSetThreads;
 
     public static boolean SCREEN_TOUCHED;
     protected static float X;              // OpenGL Coordinate System
@@ -68,24 +69,57 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         mPolygons=new Polygon[2];
 
-        mPolygonThread1=new Thread(
-            new Runnable(){
-                public void run(){
-                    mPolygons[0]=new Polygon(mScreenRatio, mThemes[innerThemeIndex]);
+        mPolygonThreads = new Thread[]{
+            new Thread(
+                new Runnable(){
+                    public void run(){
+                        mPolygons[0]=new Polygon(mScreenRatio, mThemes[innerThemeIndex]);
+                        mPolygons[0].isExpanded=true;
+                    }
                 }
-            }
-        );
-
-        mPolygonThread2=new Thread(
-            new Runnable(){
-                public void run(){
-                    mPolygons[1]=new Polygon(mScreenRatio, mThemes[outerThemeIndex]);
+            ),
+            new Thread(
+                new Runnable(){
+                    public void run(){
+                        mPolygons[1]=new Polygon(mScreenRatio, mThemes[outerThemeIndex]);
+                    }
                 }
-            }
-        );
+            )
+        };
 
-        mPolygonThread1.start();
-        mPolygonThread2.start();
+        for(Thread i: mPolygonThreads){
+            i.start();
+        }
+
+        mObstacleSets=new ObstacleSet[3];
+
+        mObstacleSetThreads = new Thread[]{
+            new Thread(
+                new Runnable(){
+                    public void run(){
+                        mObstacleSets[0]=new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 0);
+                    }
+                }
+            ),
+            new Thread(
+                new Runnable(){
+                    public void run(){
+                        mObstacleSets[1]=new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 1);
+                    }
+                }
+            ),
+            new Thread(
+                new Runnable(){
+                    public void run(){
+                        mObstacleSets[2]=new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 2);
+                    }
+                }
+            )
+        };
+
+        for(Thread i: mObstacleSetThreads){
+            i.start();
+        }
 
         gl10.glMatrixMode(GL10.GL_PROJECTION);
         gl10.glLoadIdentity();
@@ -101,11 +135,6 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         innerCircleIndex = 0;
 
         mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex]);
-        mObstacleSets=new ObstacleSet[]{    // TODO: add threading...
-                new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 0),
-                new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 1),
-                new ObstacleSet(mScreenRatio, mThemes[outerThemeIndex], 2)
-        };
 
         mObstacleSetIndex=0;
     }
@@ -114,9 +143,8 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     public void onDrawFrame(GL10 gl10) {
         gl10.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         TSLF =SystemClock.elapsedRealtime()- mTimeBeforeDrawing;
-
-        if(TSLF>=100){      // fix for massive frame bumps right after onCreate() is being called
-            TSLF=20;        // TODO: different value for different performances?
+        if(TSLF*0.001>0.3){      // fix for massive frame bumps right after onCreate() is being called
+            TSLF=20;
         }
         mTimeBeforeDrawing=SystemClock.elapsedRealtime();
 
@@ -143,11 +171,17 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         }else{
             mFirstFrame=false;
             try {
-                mPolygonThread1.join();
-                mPolygonThread2.join();
+                for(Thread i:mPolygonThreads){
+                    i.join();
+                }
+
+                for(Thread i:mObstacleSetThreads){
+                    i.join();
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            mTimeBeforeDrawing=SystemClock.elapsedRealtime();
         }
 
         if(innerCircleIndex ==0) {

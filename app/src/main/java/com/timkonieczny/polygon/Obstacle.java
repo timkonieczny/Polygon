@@ -83,7 +83,12 @@ public class Obstacle extends Shape{
 
         if (foreignOffsetPermission) {
             if (scalingFactor < fullExpansion) {
-                scalingFactor += GLRenderer.TSLF*0.001;
+                if(GLRenderer.TSLF<100){
+                    scalingFactor += GLRenderer.TSLF*0.001;
+                }else{
+                    scalingFactor += 0.05;  // fix for big frame bumps
+                }
+
                 if(scalingFactor>=mScalingOffset){
                     offsetPermission=true;
                 }
@@ -92,7 +97,7 @@ public class Obstacle extends Shape{
             }
 
             if(scalingFactor>0.8f&&scalingFactor<1.0f&&mAngle<280.0f&&mAngle>90.0f){    // collision
-                Log.d("collision","angle="+mAngle);
+//                Log.d("collision","angle="+mAngle);
                 // TODO: game over
             }
 
