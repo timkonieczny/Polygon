@@ -7,8 +7,6 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.jetbrains.annotations.NotNull;
-
 public class GameGLSurfaceView extends GLSurfaceView{
 
     private int mWidth;
@@ -43,7 +41,7 @@ public class GameGLSurfaceView extends GLSurfaceView{
     }
 
     @Override
-    public boolean onTouchEvent(@NotNull MotionEvent e) {
+    public boolean onTouchEvent(MotionEvent e) {
         if (e.getActionMasked()==MotionEvent.ACTION_DOWN){
             GLRenderer.SCREEN_TOUCHED =true;
 
@@ -69,4 +67,6 @@ public class GameGLSurfaceView extends GLSurfaceView{
             return false;
         }
     }
+
+
 }
