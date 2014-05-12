@@ -49,8 +49,8 @@ public class MainActivity extends Activity implements SensorEventListener{
             return;
         }
 
-        SENSOR_X=event.values[0];
-        SENSOR_Y=event.values[1];
+        SENSOR_X=event.values[1];
+        SENSOR_Y=event.values[0];
         SENSOR_Z=event.values[2];
         Log.d("MainActivity","x="+Float.toString(SENSOR_X)+" y="+Float.toString(SENSOR_Y)+" z="+Float.toString(SENSOR_Z));
     }

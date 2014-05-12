@@ -53,10 +53,7 @@ public class Polygon extends Shape{
         }
 
         gl10.glLoadIdentity();   // reset the matrix to its default state
-//        GLU.gluLookAt(gl10, 0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-//        GLU.gluLookAt(gl10, 1.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 3.0f);
-//        GLU.gluLookAt(gl10, MainActivity.SENSOR_X, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 3.0f);
-        GLU.gluLookAt(gl10, -MainActivity.SENSOR_X*2, 0.0f, 3.0f, -MainActivity.SENSOR_X*2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        GLU.gluLookAt(gl10, MainActivity.SENSOR_X*2, 0.0f, 3.0f, MainActivity.SENSOR_X*2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
         gl10.glTranslatef(0.0f, screenRatio -1.0f, 0.0f);
         gl10.glScalef(scalingFactor, scalingFactor, 1.0f);
