@@ -6,7 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Triangle extends Shape {
 
-    public Triangle(float screenRatio, ColorTheme theme) {
+    public Triangle(float screenRatio, float[] theme) {
         super(screenRatio);
 
         mCoords = new float[]{
@@ -15,7 +15,7 @@ public class Triangle extends Shape {
          1.0f, -1.0f, 0.0f // bottom right
         };
 
-        initializeBuffers(theme, 2);
+        initializeBuffers(theme);
     }
 
     public void draw(GL10 gl10) {

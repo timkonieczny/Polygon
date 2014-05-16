@@ -28,12 +28,12 @@ public class Shape {
         scalingFactor=0.0f;
     }
 
-    public void updateColor(ColorTheme theme, int shapeIndex){
+    public void updateColor(float[] theme){
 
-        r = theme.theme[shapeIndex][0];
-        g = theme.theme[shapeIndex][1];
-        b = theme.theme[shapeIndex][2];
-        a = theme.theme[shapeIndex][3];
+        r = theme[0];
+        g = theme[1];
+        b = theme[2];
+        a = theme[3];
 
         for(int i=0; i< 4*mCoords.length/3; i+=4){
             mColorBuffer.put(i, r);
@@ -43,7 +43,7 @@ public class Shape {
         }
     }
 
-    public void initializeBuffers(ColorTheme theme, int shapeIndex){
+    public void initializeBuffers(float theme[]){
         mVertexByteBuffer = ByteBuffer.allocateDirect(mCoords.length * 4);
         mVertexByteBuffer.order(ByteOrder.nativeOrder());
         mVertexBuffer = mVertexByteBuffer.asFloatBuffer();
@@ -53,7 +53,7 @@ public class Shape {
         mColorByteBuffer = ByteBuffer.allocateDirect(16*mCoords.length/3);
         mColorByteBuffer.order(ByteOrder.nativeOrder());
         mColorBuffer = mColorByteBuffer.asFloatBuffer();
-        updateColor(theme, shapeIndex);
+        updateColor(theme);
         mColorBuffer.position(0);
     }
 }

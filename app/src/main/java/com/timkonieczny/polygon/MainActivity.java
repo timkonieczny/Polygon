@@ -16,6 +16,8 @@ public class MainActivity extends Activity implements SensorEventListener{
     private GLSurfaceView mGLSurfaceView;
     private SensorManager mSensorManager;
     protected static float SENSOR_X, SENSOR_Y, SENSOR_Z;
+    private boolean mInit;
+    private float mXOffset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class MainActivity extends Activity implements SensorEventListener{
         super.onResume();
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_FASTEST);
         mGLSurfaceView.onResume();
+        mInit=true;
     }
 
     @Override
@@ -49,7 +52,11 @@ public class MainActivity extends Activity implements SensorEventListener{
             return;
         }
 
-        SENSOR_X=event.values[1];
+        if(mInit){
+            mXOffset=event.values[1];
+        }
+
+        SENSOR_X=event.values[1]+mXOffset-event.values[0];
         SENSOR_Y=event.values[0];
         SENSOR_Z=event.values[2];
         Log.d("MainActivity","x="+Float.toString(SENSOR_X)+" y="+Float.toString(SENSOR_Y)+" z="+Float.toString(SENSOR_Z));

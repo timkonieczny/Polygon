@@ -8,7 +8,7 @@ public class Polygon extends Shape{
 
     private int mPoints = 52;   // 50 vertices + center + first vertex as start and ending (2x)
 
-    public Polygon(float screenRatio, ColorTheme theme) {
+    public Polygon(float screenRatio, float[] theme) {
         super(screenRatio);
 
         mCoords = new float[(mPoints) * coordsPerVertex];
@@ -32,7 +32,7 @@ public class Polygon extends Shape{
         mCoords[mCoords.length-2]= mCoords[4];
         mCoords[mCoords.length-1]= mCoords[5];
 
-        initializeBuffers(theme, 0);
+        initializeBuffers(theme);
     }
 
     public void draw(GL10 gl10) {

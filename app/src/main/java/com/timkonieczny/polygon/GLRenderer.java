@@ -47,19 +47,34 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         mThemes = new ColorTheme[]{
                 new ColorTheme(
-                        new float[]{1.0f, 1.0f, 1.0f, 1.0f},    // white circle
-                        new float[]{0.0f, 0.0f, 1.0f, 1.0f},    // blue obstacle
-                        new float[]{1.0f, 1.0f, 0.0f, 1.0f}     // yellow triangle
+                        new float[]{0.20f, 0.71f, 0.91f, 1.00f},    // blue circle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white obstacle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white triangle
+                        new float[]{0.00f, 0.60f, 0.80f, 1.00f}     // shadow
                 ),
                 new ColorTheme(
-                        new float[]{1.0f, 0.0f, 0.0f, 1.0f},    // red
-                        new float[]{1.0f, 1.0f, 0.0f, 1.0f},    // yellow
-                        new float[]{0.0f, 0.0f, 0.0f, 1.0f}     // black
+                        new float[]{0.27f, 0.40f, 0.80f, 1.00f},    // purple circle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white obstacle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white triangle
+                        new float[]{0.60f, 0.20f, 0.80f, 1.00f}     // shadow
                 ),
                 new ColorTheme(
-                        new float[]{0.0f, 1.0f, 1.0f, 1.0f},    // cyan
-                        new float[]{1.0f, 0.0f, 1.0f, 1.0f},    // magenta
-                        new float[]{1.0f, 1.0f, 1.0f, 1.0f}     // white
+                        new float[]{0.60f, 0.80f, 0.00f, 1.00f},    // green circle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white obstacle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white triangle
+                        new float[]{0.40f, 0.60f, 0.00f, 1.00f}     // shadow
+                ),
+                new ColorTheme(
+                        new float[]{1.00f, 0.73f, 0.20f, 1.00f},    // orange circle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white obstacle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white triangle
+                        new float[]{1.00f, 0.53f, 0.00f, 0.00f}     // shadow
+                ),
+                new ColorTheme(
+                        new float[]{1.00f, 0.27f, 0.27f, 1.00f},    // red circle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white obstacle
+                        new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white triangle
+                        new float[]{0.80f, 0.00f, 0.00f, 1.00f}     // shadow
                 )
         };
 
@@ -73,7 +88,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             new Thread(
                 new Runnable(){
                     public void run(){
-                        mPolygons[0]=new Polygon(mScreenRatio, mThemes[innerThemeIndex]);
+                        mPolygons[0]=new Polygon(mScreenRatio, mThemes[innerThemeIndex].theme[0]);
                         mPolygons[0].isExpanded=true;
                     }
                 }
@@ -81,7 +96,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             new Thread(
                 new Runnable(){
                     public void run(){
-                        mPolygons[1]=new Polygon(mScreenRatio, mThemes[outerThemeIndex]);
+                        mPolygons[1]=new Polygon(mScreenRatio, mThemes[outerThemeIndex].theme[0]);
                     }
                 }
             )
@@ -134,7 +149,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         mFirstFrame=true;
         innerCircleIndex = 0;
 
-        mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex]);
+        mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[2]);
 
         mObstacleSetIndex=0;
     }
@@ -161,12 +176,13 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                 mPolygons[innerCircleIndex].scalingFactor=0.0f;
 
                 chooseTheme();
-                mPolygons[innerCircleIndex].updateColor(mThemes[innerThemeIndex], 0);
+                mPolygons[innerCircleIndex].updateColor(mThemes[innerThemeIndex].theme[0]);
+
                 for(ObstacleSet i: mObstacleSets){
                     i.updateColor(mThemes[outerThemeIndex]);
                 }
 
-                mTriangle.updateColor(mThemes[outerThemeIndex], 2);
+                mTriangle.updateColor(mThemes[outerThemeIndex].theme[2]);
             }
         }else{
             mFirstFrame=false;
