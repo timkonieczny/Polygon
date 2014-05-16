@@ -25,7 +25,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     private int innerCircleIndex;
 
     private Polygon[] mPolygons;
-    private Triangle mTriangle;
+    private Triangle mTriangle, mShadowTriangle;
     private ColorTheme[] mThemes;
     private ObstacleSet[] mObstacleSets;
     private int mObstacleSetIndex;
@@ -149,7 +149,8 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         mFirstFrame=true;
         innerCircleIndex = 0;
 
-        mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[2]);
+        mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[2],false);
+        mShadowTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[3],true);
 
         mObstacleSetIndex=0;
     }
@@ -183,6 +184,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                 }
 
                 mTriangle.updateColor(mThemes[outerThemeIndex].theme[2]);
+                mShadowTriangle.updateColor(mThemes[outerThemeIndex].theme[3]);
             }
         }else{
             mFirstFrame=false;
@@ -208,6 +210,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             mPolygons[1].draw(gl10);
         }
 
+        mShadowTriangle.draw(gl10);
         mTriangle.draw(gl10);
 
         if(mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1].isExpanded){

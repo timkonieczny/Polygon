@@ -14,9 +14,11 @@ public class Obstacle extends Shape{
     protected boolean offsetPermission=false;
     private final float scalingDefault, angleDefault;
 
+    private final boolean mIsShadow;
+
     private Polygon mGameOverPolygon;
 
-    public Obstacle(float screenRatio, float pieSize, float[] theme, float angleOffset, float scalingOffset){
+    public Obstacle(float screenRatio, float pieSize, float[] theme, float angleOffset, float scalingOffset, boolean isShadow){
         super(screenRatio);
         angleDefault=angleOffset;
         scalingDefault=scalingOffset;
@@ -65,6 +67,8 @@ public class Obstacle extends Shape{
         initializeBuffers(theme);
 
         mGameOverPolygon = new Polygon(screenRatio,new float[]{0.0f,0.0f,0.0f,0.5f});
+
+        mIsShadow=isShadow;
     }
 
     public void resetValues(){
@@ -106,8 +110,12 @@ public class Obstacle extends Shape{
             }
 
             gl10.glLoadIdentity();   // reset the matrix to its default state
-            GLU.gluLookAt(gl10, MainActivity.SENSOR_X*2, 0.0f, 3.0f, MainActivity.SENSOR_X*2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
+            if(!mIsShadow) {
+                GLU.gluLookAt(gl10, MainActivity.SENSOR_X * 2, 0.0f, 3.0f, MainActivity.SENSOR_X * 2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+            }else{
+                GLU.gluLookAt(gl10, MainActivity.SENSOR_X, 0.0f, 3.0f, MainActivity.SENSOR_X, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+            }
             gl10.glTranslatef(0.0f, screenRatio - 1.0f, 0.0f);
             gl10.glRotatef(angle, 0.0f, 0.0f, 1.0f);
 

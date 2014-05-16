@@ -6,23 +6,29 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Triangle extends Shape {
 
-    public Triangle(float screenRatio, float[] theme) {
+    private final boolean mIsShadow;
+
+    public Triangle(float screenRatio, float[] theme, boolean isShadow) {
         super(screenRatio);
 
         mCoords = new float[]{
          0.0f,  0.0f, 0.0f,// top
-        -1.0f, -1.0f, 0.0f,// bottom left
-         1.0f, -1.0f, 0.0f // bottom right
+        -0.6f, -1.0f, 0.0f,// bottom left
+         0.6f, -1.0f, 0.0f // bottom right
         };
 
         initializeBuffers(theme);
+        mIsShadow=isShadow;
     }
 
     public void draw(GL10 gl10) {
 
         gl10.glLoadIdentity();   // reset the matrix to its default state
-        GLU.gluLookAt(gl10, MainActivity.SENSOR_X*2, 0.0f, 3.0f, MainActivity.SENSOR_X*2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-
+        if(!mIsShadow) {
+            GLU.gluLookAt(gl10, MainActivity.SENSOR_X * 2, 0.0f, 3.0f, MainActivity.SENSOR_X * 2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        }else{
+            GLU.gluLookAt(gl10, MainActivity.SENSOR_X, 0.0f, 3.0f, MainActivity.SENSOR_X, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        }
         gl10.glTranslatef(0.0f, screenRatio -2.0f, 0.0f);
         gl10.glScalef(0.1f, 0.1f, 1.0f);
         gl10.glEnable(GL10.GL_BLEND);
