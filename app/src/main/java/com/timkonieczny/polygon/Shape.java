@@ -9,12 +9,12 @@ public class Shape {
     protected final int coordsPerVertex;
 
     protected float r,g,b,a;
-    protected FloatBuffer mColorBuffer;
-    protected float mCoords[];
+    protected FloatBuffer colorBuffer;
+    protected float coords[];
 
-    protected FloatBuffer mVertexBuffer;
-    private ByteBuffer mVertexByteBuffer;
-    private ByteBuffer mColorByteBuffer;
+    protected FloatBuffer vertexBuffer;
+    protected ByteBuffer mVertexByteBuffer;
+    protected ByteBuffer colorByteBuffer;
 
     protected float scalingFactor;
     protected final float screenRatio;
@@ -35,25 +35,25 @@ public class Shape {
         b = theme[2];
         a = theme[3];
 
-        for(int i=0; i< 4*mCoords.length/3; i+=4){
-            mColorBuffer.put(i, r);
-            mColorBuffer.put(i+1, g);
-            mColorBuffer.put(i+2, b);
-            mColorBuffer.put(i+3, a);
+        for(int i=0; i< 4* coords.length/3; i+=4){
+            colorBuffer.put(i, r);
+            colorBuffer.put(i + 1, g);
+            colorBuffer.put(i + 2, b);
+            colorBuffer.put(i + 3, a);
         }
     }
 
     public void initializeBuffers(float theme[]){
-        mVertexByteBuffer = ByteBuffer.allocateDirect(mCoords.length * 4);
+        mVertexByteBuffer = ByteBuffer.allocateDirect(coords.length * 4);
         mVertexByteBuffer.order(ByteOrder.nativeOrder());
-        mVertexBuffer = mVertexByteBuffer.asFloatBuffer();
-        mVertexBuffer.put(mCoords);
-        mVertexBuffer.position(0);
+        vertexBuffer = mVertexByteBuffer.asFloatBuffer();
+        vertexBuffer.put(coords);
+        vertexBuffer.position(0);
 
-        mColorByteBuffer = ByteBuffer.allocateDirect(16*mCoords.length/3);
-        mColorByteBuffer.order(ByteOrder.nativeOrder());
-        mColorBuffer = mColorByteBuffer.asFloatBuffer();
+        colorByteBuffer = ByteBuffer.allocateDirect(16* coords.length/3);
+        colorByteBuffer.order(ByteOrder.nativeOrder());
+        colorBuffer = colorByteBuffer.asFloatBuffer();
         updateColor(theme);
-        mColorBuffer.position(0);
+        colorBuffer.position(0);
     }
 }

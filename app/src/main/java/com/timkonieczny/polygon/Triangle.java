@@ -11,7 +11,7 @@ public class Triangle extends Shape {
     public Triangle(float screenRatio, float[] theme, boolean isShadow) {
         super(screenRatio);
 
-        mCoords = new float[]{
+        coords = new float[]{
          0.0f,  0.0f, 0.0f,// top
         -0.6f, -1.0f, 0.0f,// bottom left
          0.6f, -1.0f, 0.0f // bottom right
@@ -34,8 +34,8 @@ public class Triangle extends Shape {
         gl10.glEnable(GL10.GL_BLEND);
         gl10.glShadeModel(GL10.GL_FLAT);
         gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        gl10.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
-        gl10.glVertexPointer(coordsPerVertex, GL10.GL_FLOAT, 0, mVertexBuffer);
-        gl10.glDrawArrays(GL10.GL_TRIANGLES, 0, mCoords.length / coordsPerVertex);
+        gl10.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
+        gl10.glVertexPointer(coordsPerVertex, GL10.GL_FLOAT, 0, vertexBuffer);
+        gl10.glDrawArrays(GL10.GL_TRIANGLES, 0, coords.length / coordsPerVertex);
     }
 }

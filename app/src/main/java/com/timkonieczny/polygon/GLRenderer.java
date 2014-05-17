@@ -34,6 +34,8 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
     private int outerThemeIndex, innerThemeIndex;
 
+    protected final float[] white= new float[]{1.0f,1.0f,1.0f,1.0f};
+
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         gl10.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -88,8 +90,10 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             new Thread(
                 new Runnable(){
                     public void run(){
-                        mPolygons[0]=new Polygon(mScreenRatio, mThemes[innerThemeIndex].theme[0]);
+                        mPolygons[0]=new Polygon(mScreenRatio);  // TODO: 2nd constructor
                         mPolygons[0].isExpanded=true;
+                        mPolygons[0].updateColor(white);
+                        mPolygons[innerCircleIndex].updateTheme(mThemes[innerThemeIndex].theme[0]);
                     }
                 }
             ),
@@ -177,7 +181,10 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                 mPolygons[innerCircleIndex].scalingFactor=0.0f;
 
                 chooseTheme();
-                mPolygons[innerCircleIndex].updateColor(mThemes[innerThemeIndex].theme[0]);
+
+                mPolygons[innerCircleIndex].updateColor(white);
+
+                mPolygons[innerCircleIndex].updateTheme(mThemes[innerThemeIndex].theme[0]);
 
                 for(ObstacleSet i: mObstacleSets){
                     i.updateColor(mThemes[outerThemeIndex]);

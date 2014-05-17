@@ -34,35 +34,35 @@ public class Obstacle extends Shape{
             points++;
         }
 
-        mCoords = new float[(points) * coordsPerVertex];
+        coords = new float[(points) * coordsPerVertex];
         int j=0;
 
-        for (int i= 0; i<mCoords.length-6; i+= coordsPerVertex*2) {
+        for (int i= 0; i< coords.length-6; i+= coordsPerVertex*2) {
 
             double sectionOfPi = j*(double)1/(points -2)*pieSize*(2*Math.PI);
             j++;
 
-            mCoords[i] = (float) (innerRadius*Math.cos(sectionOfPi));      // x
-            mCoords[i+3] = (float) (outerRadius*Math.cos(sectionOfPi));    // x
+            coords[i] = (float) (innerRadius*Math.cos(sectionOfPi));      // x
+            coords[i+3] = (float) (outerRadius*Math.cos(sectionOfPi));    // x
 
-            if(mCoords[i]==(float)-innerRadius|| mCoords[i]==(float)innerRadius){        //Regelung für Spezialfälle von cos() und sin()
-                mCoords[i+1] = 0.0f;    // y
-                mCoords[i+4] = 0.0f;    // y
+            if(coords[i]==(float)-innerRadius|| coords[i]==(float)innerRadius){        //Regelung für Spezialfälle von cos() und sin()
+                coords[i+1] = 0.0f;    // y
+                coords[i+4] = 0.0f;    // y
             }else {
-                mCoords[i+1] = (float) (innerRadius*Math.sin(sectionOfPi));    // y
-                mCoords[i+4] = (float) (outerRadius*Math.sin(sectionOfPi));    // y
+                coords[i+1] = (float) (innerRadius*Math.sin(sectionOfPi));    // y
+                coords[i+4] = (float) (outerRadius*Math.sin(sectionOfPi));    // y
             }
 
-            mCoords[i+2] = 0.0f;    // z
-            mCoords[i+5] = 0.0f;    // z
+            coords[i+2] = 0.0f;    // z
+            coords[i+5] = 0.0f;    // z
         }
 
-        mCoords[mCoords.length-6]=(float) (innerRadius*Math.cos(j*(double)1/(points -2)*pieSize*(2*Math.PI)));      // x    Letztes Koordinatenpaar
-        mCoords[mCoords.length-3]=(float) (outerRadius*Math.cos(j*(double)1/(points -2)*pieSize*(2*Math.PI)));      // x
-        mCoords[mCoords.length-5]=1.0f; //y
-        mCoords[mCoords.length-2]=1.2f; //y
-        mCoords[mCoords.length-4]=0.0f; //z
-        mCoords[mCoords.length-1]=0.0f; //z
+        coords[coords.length-6]=(float) (innerRadius*Math.cos(j*(double)1/(points -2)*pieSize*(2*Math.PI)));      // x    Letztes Koordinatenpaar
+        coords[coords.length-3]=(float) (outerRadius*Math.cos(j*(double)1/(points -2)*pieSize*(2*Math.PI)));      // x
+        coords[coords.length-5]=1.0f; //y
+        coords[coords.length-2]=1.2f; //y
+        coords[coords.length-4]=0.0f; //z
+        coords[coords.length-1]=0.0f; //z
 
         initializeBuffers(theme);
 
@@ -105,8 +105,8 @@ public class Obstacle extends Shape{
 
             if(scalingFactor>0.8f&&scalingFactor<1.0f&& angle <280.0f&& angle >90.0f){    // collision TODO: imprecise?
                 // TODO: game over
-                mGameOverPolygon.scalingFactor=0.5f;
-                mGameOverPolygon.draw(gl10);
+//                mGameOverPolygon.scalingFactor=0.5f;
+//                mGameOverPolygon.draw(gl10);
             }
 
             gl10.glLoadIdentity();   // reset the matrix to its default state
@@ -123,8 +123,8 @@ public class Obstacle extends Shape{
             gl10.glEnable(GL10.GL_BLEND);
             gl10.glShadeModel(GL10.GL_FLAT);
             gl10.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-            gl10.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
-            gl10.glVertexPointer(coordsPerVertex, GL10.GL_FLOAT, 0, mVertexBuffer);
+            gl10.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
+            gl10.glVertexPointer(coordsPerVertex, GL10.GL_FLOAT, 0, vertexBuffer);
             gl10.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, (points));
         }
     }
