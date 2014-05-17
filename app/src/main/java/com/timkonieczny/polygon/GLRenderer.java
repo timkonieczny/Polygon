@@ -68,7 +68,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                         new float[]{1.00f, 0.73f, 0.20f, 1.00f},    // orange circle
                         new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white obstacle
                         new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white triangle
-                        new float[]{1.00f, 0.53f, 0.00f, 0.00f}     // shadow
+                        new float[]{1.00f, 0.53f, 0.00f, 1.00f}     // shadow
                 ),
                 new ColorTheme(
                         new float[]{1.00f, 0.27f, 0.27f, 1.00f},    // red circle

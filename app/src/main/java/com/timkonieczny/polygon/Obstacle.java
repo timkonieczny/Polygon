@@ -114,7 +114,7 @@ public class Obstacle extends Shape{
             if(!mIsShadow) {
                 GLU.gluLookAt(gl10, MainActivity.SENSOR_X * 2, 0.0f, 3.0f, MainActivity.SENSOR_X * 2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
             }else{
-                GLU.gluLookAt(gl10, MainActivity.SENSOR_X, 0.0f, 3.0f, MainActivity.SENSOR_X, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+                GLU.gluLookAt(gl10, MainActivity.SENSOR_X+0.1f, 0.0f, 3.0f, MainActivity.SENSOR_X+0.1f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
             }
             gl10.glTranslatef(0.0f, screenRatio - 1.0f, 0.0f);
             gl10.glRotatef(angle, 0.0f, 0.0f, 1.0f);
