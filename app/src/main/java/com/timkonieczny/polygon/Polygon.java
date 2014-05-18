@@ -12,7 +12,7 @@ public class Polygon extends Shape{
     private int mPoints = 52;   // 50 vertices + center + first vertex as start and ending (2x)
     protected float[] theme;
     private float mCurrentR, mCurrentG, mCurrentB;
-    private boolean mIsRFaded,mIsGFaded,mIsBFaded;
+    private boolean mIsRFaded,mIsGFaded,mIsBFaded, mAddR, mAddG, mAddB, mIsAddRGBSet;
 
     public Polygon(float screenRatio, float[] theme) {
         super(screenRatio);
@@ -65,30 +65,63 @@ public class Polygon extends Shape{
     }
 
     private void fadeColor(){
-
-        if(!mIsRFaded&&mCurrentR>r) {
-            mCurrentR -= GLRenderer.TSLF * 0.001;
-        }else{
-            mCurrentR=r;
-            mIsRFaded=true;
+        if(!mIsAddRGBSet) {
+            mAddR = mCurrentR <= r;
+            mAddG = mCurrentG <= g;
+            mAddB = mCurrentB <= b;
+            mIsAddRGBSet=true;
         }
 
-        if(!mIsGFaded&&mCurrentG>g){
-            mCurrentG -= GLRenderer.TSLF * 0.001;
+        if(mAddR){
+            if(mCurrentR<r){
+                mCurrentR+= GLRenderer.TSLF * 0.001;
+            }else{
+                mCurrentR=r;
+                mIsRFaded=true;
+            }
         }else{
-            mCurrentG=g;
-            mIsGFaded=true;
+            if(mCurrentR>r){
+                mCurrentR-= GLRenderer.TSLF * 0.001;
+            }else{
+                mCurrentR=r;
+                mIsRFaded=true;
+            }
         }
 
-        if(!mIsBFaded&&mCurrentB>b) {
-            mCurrentB -= GLRenderer.TSLF * 0.001;
+        if(mAddG){
+            if(mCurrentG<g){
+                mCurrentG+= GLRenderer.TSLF * 0.001;
+            }else{
+                mCurrentG=g;
+                mIsGFaded=true;
+            }
         }else{
-            mCurrentB=b;
-            mIsBFaded=true;
+            if(mCurrentG>g){
+                mCurrentG-= GLRenderer.TSLF * 0.001;
+            }else{
+                mCurrentG=g;
+                mIsGFaded=true;
+            }
+        }
+
+        if(mAddB){
+            if(mCurrentB<b){
+                mCurrentB+= GLRenderer.TSLF * 0.001;
+            }else{
+                mCurrentB=b;
+                mIsBFaded=true;
+            }
+        }else{
+            if(mCurrentB>b){
+                mCurrentB-= GLRenderer.TSLF * 0.001;
+            }else{
+                mCurrentB=b;
+                mIsBFaded=true;
+            }
         }
 
         for(int i=0; i< 4* coords.length/3; i+=4){
-            colorBuffer.put(i, mCurrentR);  // TODO: mIsRGBFaded
+            colorBuffer.put(i, mCurrentR);
             colorBuffer.put(i+1, mCurrentG);
             colorBuffer.put(i+2, mCurrentB);
             colorBuffer.put(i+3, 1.0f);
@@ -110,6 +143,8 @@ public class Polygon extends Shape{
                 scalingFactor += GLRenderer.TSLF*0.001;
                 if(!mIsRFaded||!mIsGFaded||!mIsBFaded) {
                     fadeColor();
+                }else{
+                    mIsAddRGBSet=false;
                 }
             } else {
                 gl10.glClearColor(r, g, b, a);
