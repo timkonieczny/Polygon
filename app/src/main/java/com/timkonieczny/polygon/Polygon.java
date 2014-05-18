@@ -50,7 +50,6 @@ public class Polygon extends Shape{
         coords[coords.length-1]= coords[5];
 
         mCurrentR=mCurrentG=mCurrentB=1.0f;
-        mIsRFaded=mIsGFaded=mIsBFaded=false;
     }
 
     private void initializeBuffersIgnoreTheme(){
@@ -71,22 +70,25 @@ public class Polygon extends Shape{
             mCurrentR -= GLRenderer.TSLF * 0.001;
         }else{
             mCurrentR=r;
+            mIsRFaded=true;
         }
 
         if(!mIsGFaded&&mCurrentG>g){
             mCurrentG -= GLRenderer.TSLF * 0.001;
         }else{
             mCurrentG=g;
+            mIsGFaded=true;
         }
 
         if(!mIsBFaded&&mCurrentB>b) {
             mCurrentB -= GLRenderer.TSLF * 0.001;
         }else{
             mCurrentB=b;
+            mIsBFaded=true;
         }
 
         for(int i=0; i< 4* coords.length/3; i+=4){
-            colorBuffer.put(i, mCurrentR);
+            colorBuffer.put(i, mCurrentR);  // TODO: mIsRGBFaded
             colorBuffer.put(i+1, mCurrentG);
             colorBuffer.put(i+2, mCurrentB);
             colorBuffer.put(i+3, 1.0f);

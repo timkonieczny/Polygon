@@ -90,7 +90,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             new Thread(
                 new Runnable(){
                     public void run(){
-                        mPolygons[0]=new Polygon(mScreenRatio);  // TODO: 2nd constructor
+                        mPolygons[0]=new Polygon(mScreenRatio);
                         mPolygons[0].isExpanded=true;
                         mPolygons[0].updateColor(white);
                         mPolygons[innerCircleIndex].updateTheme(mThemes[innerThemeIndex].theme[0]);
@@ -178,12 +178,11 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                 }else {
                     innerCircleIndex =0;
                 }
-                mPolygons[innerCircleIndex].scalingFactor=0.0f;
 
                 chooseTheme();
 
+                mPolygons[innerCircleIndex].scalingFactor=0.0f;
                 mPolygons[innerCircleIndex].updateColor(white);
-
                 mPolygons[innerCircleIndex].updateTheme(mThemes[innerThemeIndex].theme[0]);
 
                 for(ObstacleSet i: mObstacleSets){
@@ -192,6 +191,11 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
                 mTriangle.updateColor(mThemes[outerThemeIndex].theme[2]);
                 mShadowTriangle.updateColor(mThemes[outerThemeIndex].theme[3]);
+
+                mShadowTriangle.updateColor(white);
+                mShadowTriangle.updateTheme(mThemes[outerThemeIndex].theme[3]);
+                mShadowTriangle.isFading=true;
+
             }
         }else{
             mFirstFrame=false;
