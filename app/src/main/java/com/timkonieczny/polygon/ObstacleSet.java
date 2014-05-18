@@ -6,6 +6,7 @@ public class ObstacleSet {
 
     protected Obstacle[] mObstacles;
     protected Obstacle[] mObstacleShadows;
+    protected static float CURRENT_R, CURRENT_G, CURRENT_B;
 
     public ObstacleSet(float screenRatio, ColorTheme theme, int setIndex) {
 
@@ -84,6 +85,7 @@ public class ObstacleSet {
         }
         for(Obstacle i: mObstacleShadows){
             i.updateColor(theme.theme[3]);
+            i.isFading=true;
         }
     }
 

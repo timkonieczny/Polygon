@@ -18,6 +18,9 @@ public class Obstacle extends Shape{
 
     private Polygon mGameOverPolygon;
 
+    private boolean mIsRFaded,mIsGFaded,mIsBFaded, mAddR, mAddG, mAddB, mIsAddRGBSet;
+    protected boolean isFading;
+
     public Obstacle(float screenRatio, float pieSize, float[] theme, float angleOffset, float scalingOffset, boolean isShadow){
         super(screenRatio);
         angleDefault=angleOffset;
@@ -79,12 +82,85 @@ public class Obstacle extends Shape{
         offsetPermission=false;
     }
 
+    private void fadeColor(){
+
+        if(!mIsAddRGBSet) {
+            mAddR = ObstacleSet.CURRENT_R <= r;
+            mAddG = ObstacleSet.CURRENT_G <= g;
+            mAddB = ObstacleSet.CURRENT_B <= b;
+            mIsAddRGBSet=true;
+        }
+
+        if(mAddR){
+            if(ObstacleSet.CURRENT_R<r){
+                ObstacleSet.CURRENT_R+= GLRenderer.TSLF * 0.001;
+            }else{
+                ObstacleSet.CURRENT_R=r;
+                mIsRFaded=true;
+            }
+        }else{
+            if(ObstacleSet.CURRENT_R>r){
+                ObstacleSet.CURRENT_R-= GLRenderer.TSLF * 0.001;
+            }else{
+                ObstacleSet.CURRENT_R=r;
+                mIsRFaded=true;
+            }
+        }
+
+        if(mAddG){
+            if(ObstacleSet.CURRENT_G<g){
+                ObstacleSet.CURRENT_G+= GLRenderer.TSLF * 0.001;
+            }else{
+                ObstacleSet.CURRENT_G=g;
+                mIsGFaded=true;
+            }
+        }else{
+            if(ObstacleSet.CURRENT_G>g){
+                ObstacleSet.CURRENT_G-= GLRenderer.TSLF * 0.001;
+            }else{
+                ObstacleSet.CURRENT_G=g;
+                mIsGFaded=true;
+            }
+        }
+
+        if(mAddB){
+            if(ObstacleSet.CURRENT_B<b){
+                ObstacleSet.CURRENT_B+= GLRenderer.TSLF * 0.001;
+            }else{
+                ObstacleSet.CURRENT_B=b;
+                mIsBFaded=true;
+            }
+        }else{
+            if(ObstacleSet.CURRENT_B>b){
+                ObstacleSet.CURRENT_B-= GLRenderer.TSLF * 0.001;
+            }else{
+                ObstacleSet.CURRENT_B=b;
+                mIsBFaded=true;
+            }
+        }
+
+        for(int i=0; i< 4* coords.length/3; i+=4){
+            colorBuffer.put(i, ObstacleSet.CURRENT_R);
+            colorBuffer.put(i+1, ObstacleSet.CURRENT_G);
+            colorBuffer.put(i+2, ObstacleSet.CURRENT_B);
+            colorBuffer.put(i+3, 1.0f);
+        }
+    }
+
     public void draw(GL10 gl10, boolean foreignOffsetPermission) {
         if(GLRenderer.SCREEN_TOUCHED) {
             if (GLRenderer.X <= 0) {
                 angle += GLRenderer.TSLF/2;
             } else {
                 angle -= GLRenderer.TSLF/2;
+            }
+        }
+
+        if(isFading) {
+            if (!mIsRFaded || !mIsGFaded || !mIsBFaded) {
+                fadeColor();
+            }else{
+                isFading =false;
             }
         }
 
@@ -95,12 +171,13 @@ public class Obstacle extends Shape{
                 }else{
                     scalingFactor += 0.05;  // fix for big frame bumps
                 }
-
                 if(scalingFactor>= scalingOffset){
                     offsetPermission=true;
                 }
             }else{
                 isExpanded =true;
+                mIsRFaded=mIsGFaded=mIsBFaded=false;
+                mIsAddRGBSet=false;
             }
 
             if(scalingFactor>0.8f&&scalingFactor<1.0f&& angle <280.0f&& angle >90.0f){    // collision TODO: imprecise?
