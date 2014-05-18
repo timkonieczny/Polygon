@@ -93,7 +93,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                         mPolygons[0]=new Polygon(mScreenRatio);
                         mPolygons[0].isExpanded=true;
                         mPolygons[0].updateColor(white);
-                        mPolygons[innerCircleIndex].updateTheme(mThemes[innerThemeIndex].theme[0]);
+                        mPolygons[innerCircleIndex].rgba=mThemes[innerThemeIndex].theme[0];
                     }
                 }
             ),
@@ -155,6 +155,8 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[2],false);
         mShadowTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[3],true);
+        mShadowTriangle.rgba=mThemes[outerThemeIndex].theme[3];
+        mShadowTriangle.current=mShadowTriangle.rgba;
 
         mObstacleSetIndex=0;
     }
@@ -183,7 +185,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
                 mPolygons[innerCircleIndex].scalingFactor=0.0f;
                 mPolygons[innerCircleIndex].updateColor(white);
-                mPolygons[innerCircleIndex].updateTheme(mThemes[innerThemeIndex].theme[0]);
+                mPolygons[innerCircleIndex].rgba=mThemes[innerThemeIndex].theme[0];
 
                 for(ObstacleSet i: mObstacleSets){
                     i.updateColor(mThemes[outerThemeIndex]);
@@ -193,7 +195,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                 mShadowTriangle.updateColor(mThemes[outerThemeIndex].theme[3]);
 
                 mShadowTriangle.updateColor(white);
-                mShadowTriangle.updateTheme(mThemes[outerThemeIndex].theme[3]);
+                mShadowTriangle.rgba=mThemes[outerThemeIndex].theme[3];
                 mShadowTriangle.isFading=true;
 
             }

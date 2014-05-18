@@ -8,8 +8,6 @@ public class Triangle extends Shape {
 
     private final boolean mIsShadow;
     protected boolean isFading;
-    private float mCurrentR, mCurrentG, mCurrentB;
-    private boolean mIsRFaded,mIsGFaded,mIsBFaded, mAddR, mAddG, mAddB, mIsAddRGBSet;
 
     protected float[] theme;
 
@@ -25,93 +23,20 @@ public class Triangle extends Shape {
         initializeBuffers(theme);
         mIsShadow=isShadow;
         isFading =false;
-        mIsRFaded=mIsGFaded=mIsBFaded=false;
-    }
-
-    protected void updateTheme(float[] theme){
-        this.theme=theme;
-        r=theme[0];
-        g=theme[1];
-        b=theme[2];
-        a=theme[3];
-    }
-
-    private void fadeColor(){
-
-        if(!mIsAddRGBSet) {
-            mAddR = mCurrentR <= r;
-            mAddG = mCurrentG <= g;
-            mAddB = mCurrentB <= b;
-            mIsAddRGBSet=true;
-        }
-
-        if(mAddR){
-            if(mCurrentR<r){
-                mCurrentR+= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentR=r;
-                mIsRFaded=true;
-            }
-        }else{
-            if(mCurrentR>r){
-                mCurrentR-= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentR=r;
-                mIsRFaded=true;
-            }
-        }
-
-        if(mAddG){
-            if(mCurrentG<g){
-                mCurrentG+= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentG=g;
-                mIsGFaded=true;
-            }
-        }else{
-            if(mCurrentG>g){
-                mCurrentG-= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentG=g;
-                mIsGFaded=true;
-            }
-        }
-
-        if(mAddB){
-            if(mCurrentB<b){
-                mCurrentB+= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentB=b;
-                mIsBFaded=true;
-            }
-        }else{
-            if(mCurrentB>b){
-                mCurrentB-= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentB=b;
-                mIsBFaded=true;
-            }
-        }
-
-        for(int i=0; i< 4* coords.length/3; i+=4){
-            colorBuffer.put(i, mCurrentR);
-            colorBuffer.put(i+1, mCurrentG);
-            colorBuffer.put(i+2, mCurrentB);
-            colorBuffer.put(i+3, 1.0f);
-        }
+        isRGBFaded[0] = isRGBFaded[1] = isRGBFaded[2] =false;
     }
 
     public void draw(GL10 gl10) {
 
         if(isFading){
-            if(!mIsRFaded||!mIsGFaded||!mIsBFaded) {
+            if(!isRGBFaded[0] ||!isRGBFaded[1] ||!isRGBFaded[2]) {
                 fadeColor();
             }else{
                 isFading=false;
             }
         }else{
-            mIsRFaded=mIsGFaded=mIsBFaded=false;
-            mIsAddRGBSet=false;
+            isRGBFaded[0] = isRGBFaded[1] = isRGBFaded[2] =false;
+            isAddRGBSet =false;
         }
 
         gl10.glLoadIdentity();   // reset the matrix to its default state

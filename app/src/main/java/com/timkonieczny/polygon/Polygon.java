@@ -11,8 +11,6 @@ public class Polygon extends Shape{
 
     private int mPoints = 52;   // 50 vertices + center + first vertex as start and ending (2x)
     protected float[] theme;
-    private float mCurrentR, mCurrentG, mCurrentB;
-    private boolean mIsRFaded,mIsGFaded,mIsBFaded, mAddR, mAddG, mAddB, mIsAddRGBSet;
 
     public Polygon(float screenRatio, float[] theme) {
         super(screenRatio);
@@ -49,7 +47,7 @@ public class Polygon extends Shape{
         coords[coords.length-2]= coords[4];
         coords[coords.length-1]= coords[5];
 
-        mCurrentR=mCurrentG=mCurrentB=1.0f;
+        current[0] = current[1] = current[2] =1.0f;
     }
 
     private void initializeBuffersIgnoreTheme(){
@@ -64,92 +62,20 @@ public class Polygon extends Shape{
         colorBuffer = colorByteBuffer.asFloatBuffer();
     }
 
-    private void fadeColor(){
-        if(!mIsAddRGBSet) {
-            mAddR = mCurrentR <= r;
-            mAddG = mCurrentG <= g;
-            mAddB = mCurrentB <= b;
-            mIsAddRGBSet=true;
-        }
-
-        if(mAddR){
-            if(mCurrentR<r){
-                mCurrentR+= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentR=r;
-                mIsRFaded=true;
-            }
-        }else{
-            if(mCurrentR>r){
-                mCurrentR-= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentR=r;
-                mIsRFaded=true;
-            }
-        }
-
-        if(mAddG){
-            if(mCurrentG<g){
-                mCurrentG+= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentG=g;
-                mIsGFaded=true;
-            }
-        }else{
-            if(mCurrentG>g){
-                mCurrentG-= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentG=g;
-                mIsGFaded=true;
-            }
-        }
-
-        if(mAddB){
-            if(mCurrentB<b){
-                mCurrentB+= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentB=b;
-                mIsBFaded=true;
-            }
-        }else{
-            if(mCurrentB>b){
-                mCurrentB-= GLRenderer.TSLF * 0.001;
-            }else{
-                mCurrentB=b;
-                mIsBFaded=true;
-            }
-        }
-
-        for(int i=0; i< 4* coords.length/3; i+=4){
-            colorBuffer.put(i, mCurrentR);
-            colorBuffer.put(i+1, mCurrentG);
-            colorBuffer.put(i+2, mCurrentB);
-            colorBuffer.put(i+3, 1.0f);
-        }
-    }
-
-    protected void updateTheme(float[] theme){
-        this.theme=theme;
-        r=theme[0];
-        g=theme[1];
-        b=theme[2];
-        a=theme[3];
-    }
-
     public void draw(GL10 gl10) {
 
         if(!isExpanded) {
             if (scalingFactor < fullExpansion) {
                 scalingFactor += GLRenderer.TSLF*0.001;
-                if(!mIsRFaded||!mIsGFaded||!mIsBFaded) {
+                if(!isRGBFaded[0] ||!isRGBFaded[1] ||!isRGBFaded[2]) {
                     fadeColor();
                 }else{
-                    mIsAddRGBSet=false;
+                    isAddRGBSet =false;
                 }
             } else {
-                gl10.glClearColor(r, g, b, a);
-                mCurrentR=mCurrentG=mCurrentB=1.0f;
-                mIsRFaded=mIsGFaded=mIsBFaded=false;
+                gl10.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+                current[0] = current[1] = current[2] =1.0f;
+                isRGBFaded[0] = isRGBFaded[1] = isRGBFaded[2] =false;
                 isExpanded = true;
             }
         }
