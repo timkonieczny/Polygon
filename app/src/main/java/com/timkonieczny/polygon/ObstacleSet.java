@@ -6,10 +6,15 @@ public class ObstacleSet {
 
     protected Obstacle[] mObstacles;
     protected Obstacle[] mObstacleShadows;
-    protected static float CURRENT_R, CURRENT_G, CURRENT_B;
-    protected boolean isAddRGBSet, isRFaded, isGFaded, isBFaded, isFading, addR, addG, addB;
+    private static float[] CURRENT;
+    private boolean isAddRGBSet, isFading;
+    private boolean[] isRGBFaded, addOrSub;
 
     public ObstacleSet(float screenRatio, ColorTheme theme, int setIndex) {
+
+        ObstacleSet.CURRENT =new float[]{theme.theme[3][0],theme.theme[3][1],theme.theme[3][2]};
+        addOrSub=new boolean[3];
+        isRGBFaded=new boolean[3];
 
         switch (setIndex){
             case 0:         // dependant on index, number of Obstacles being created for that very set
@@ -73,73 +78,46 @@ public class ObstacleSet {
     private void fadeColor(){
 
         if(!isAddRGBSet) {
-            addR = ObstacleSet.CURRENT_R <= mObstacleShadows[0].rgba[0];
-            addG = ObstacleSet.CURRENT_G <= mObstacleShadows[0].rgba[1];
-            addB = ObstacleSet.CURRENT_B <= mObstacleShadows[0].rgba[2];
+            addOrSub[0] = ObstacleSet.CURRENT[0] <= mObstacleShadows[0].rgba[0];
+            addOrSub[1] = ObstacleSet.CURRENT[1] <= mObstacleShadows[0].rgba[1];
+            addOrSub[2] = ObstacleSet.CURRENT[2] <= mObstacleShadows[0].rgba[2];
             isAddRGBSet =true;
         }
 
-        if(addR){
-            if(ObstacleSet.CURRENT_R<mObstacleShadows[0].rgba[0]){
-                ObstacleSet.CURRENT_R+= GLRenderer.TSLF * 0.001;
-            }else{
-                ObstacleSet.CURRENT_R=mObstacleShadows[0].rgba[0];
-                isRFaded =true;
-            }
-        }else{
-            if(ObstacleSet.CURRENT_R>mObstacleShadows[0].rgba[0]){
-                ObstacleSet.CURRENT_R-= GLRenderer.TSLF * 0.001;
-            }else{
-                ObstacleSet.CURRENT_R=mObstacleShadows[0].rgba[0];
-                isRFaded =true;
+        fadeRGB(0);
+        fadeRGB(1);
+        fadeRGB(2);
+
+        for (Obstacle i : mObstacleShadows) {
+            for (int j = 0; j < 4 * i.coords.length / 3; j += 4) {
+                i.colorBuffer.put(j, ObstacleSet.CURRENT[0]);
+                i.colorBuffer.put(j + 1, ObstacleSet.CURRENT[1]);
+                i.colorBuffer.put(j + 2, ObstacleSet.CURRENT[2]);
             }
         }
+    }
 
-        if(addG){
-            if(ObstacleSet.CURRENT_G<mObstacleShadows[0].rgba[1]){
-                ObstacleSet.CURRENT_G+= GLRenderer.TSLF * 0.001;
+    private void fadeRGB(int i){
+        if(addOrSub[i]){
+            if(ObstacleSet.CURRENT[i]<mObstacleShadows[i].rgba[i]){
+                ObstacleSet.CURRENT[i]+= GLRenderer.TSLF * 0.001;
             }else{
-                ObstacleSet.CURRENT_G=mObstacleShadows[0].rgba[1];
-                isGFaded =true;
+                ObstacleSet.CURRENT[i]=mObstacleShadows[i].rgba[i];
+                isRGBFaded[i] =true;
             }
         }else{
-            if(ObstacleSet.CURRENT_G>mObstacleShadows[0].rgba[1]){
-                ObstacleSet.CURRENT_G-= GLRenderer.TSLF * 0.001;
+            if(ObstacleSet.CURRENT[i]>mObstacleShadows[i].rgba[i]){
+                ObstacleSet.CURRENT[i]-= GLRenderer.TSLF * 0.001;
             }else{
-                ObstacleSet.CURRENT_G=mObstacleShadows[0].rgba[1];
-                isGFaded =true;
-            }
-        }
-
-        if(addB){
-            if(ObstacleSet.CURRENT_B<mObstacleShadows[0].rgba[2]){
-                ObstacleSet.CURRENT_B+= GLRenderer.TSLF * 0.001;
-            }else{
-                ObstacleSet.CURRENT_B=mObstacleShadows[0].rgba[2];
-                isBFaded =true;
-            }
-        }else{
-            if(ObstacleSet.CURRENT_B>mObstacleShadows[0].rgba[2]){
-                ObstacleSet.CURRENT_B-= GLRenderer.TSLF * 0.001;
-            }else{
-                ObstacleSet.CURRENT_B=mObstacleShadows[0].rgba[2];
-                isBFaded =true;
-            }
-        }
-
-        for(int i=0; i<mObstacleShadows.length; i++){
-            for(int j=0; j< 4* mObstacleShadows[i].coords.length/3; j+=4){
-                mObstacleShadows[i].colorBuffer.put(j, CURRENT_R);
-                mObstacleShadows[i].colorBuffer.put(j + 1, CURRENT_G);
-                mObstacleShadows[i].colorBuffer.put(j + 2, CURRENT_B);
-//                mObstacleShadows[i].colorBuffer.put(j + 3, 1.0f);
+                ObstacleSet.CURRENT[i]=mObstacleShadows[i].rgba[i];
+                isRGBFaded[i] =true;
             }
         }
     }
 
     protected void draw(GL10 gl10){
         if(isFading) {
-            if (!isRFaded || !isGFaded || !isBFaded) {
+            if (!isRGBFaded[0] || !isRGBFaded[1] || !isRGBFaded[2]) {
                 fadeColor();
             }else{
                 isFading =false;
@@ -167,7 +145,7 @@ public class ObstacleSet {
         }
 
         isFading=true;
-        isRFaded=isGFaded=isBFaded=false;
+        isRGBFaded[0]=isRGBFaded[1]=isRGBFaded[2]=false;
         isAddRGBSet=false;
     }
 
