@@ -46,6 +46,7 @@ public class Triangle extends Shape {
             GLU.gluLookAt(gl10, MainActivity.SENSOR_X+0.1f, 0.0f, 3.0f, MainActivity.SENSOR_X+0.1f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         }
         gl10.glTranslatef(0.0f, screenRatio -2.0f, 0.0f);
+//        gl10.glRotatef(90f,0.0f,0.0f,1.0f);
         gl10.glScalef(0.1f, 0.1f, 1.0f);
         gl10.glEnable(GL10.GL_BLEND);
         gl10.glShadeModel(GL10.GL_FLAT);

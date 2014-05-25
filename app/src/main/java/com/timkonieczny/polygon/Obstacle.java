@@ -1,6 +1,7 @@
 package com.timkonieczny.polygon;
 
 import android.opengl.GLU;
+import android.util.Log;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -104,10 +105,12 @@ public class Obstacle extends Shape{
                 isAddRGBSet =false;
             }
 
-            if(scalingFactor>0.8f&&scalingFactor<1.0f&& angle <280.0f&& angle >90.0f){    // collision TODO: imprecise?
-                // TODO: game over
-//                mGameOverPolygon.scalingFactor=0.5f;
-//                mGameOverPolygon.draw(gl10);
+            if(!mIsShadow&&scalingFactor>0.8f&&scalingFactor<1.0f) {
+                if (Math.abs(angle % 360) <= 270.0f && Math.abs(angle % 360) > 180.0f || Math.abs(angle % 360) <= 180.0f && Math.abs(angle % 360) > 90.0f) {    // collision TODO: imprecise?
+                    // TODO: game over
+                    mGameOverPolygon.scalingFactor = 0.9f;
+                    mGameOverPolygon.draw(gl10);
+                }
             }
 
             gl10.glLoadIdentity();   // reset the matrix to its default state
