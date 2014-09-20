@@ -1,7 +1,6 @@
 package com.timkonieczny.polygon;
 
 import android.opengl.GLU;
-import android.util.Log;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -106,7 +105,7 @@ public class Obstacle extends Shape{
             }
 
             if(!mIsShadow&&scalingFactor>0.8f&&scalingFactor<1.0f) {
-                if (Math.abs(angle % 360) <= 270.0f && Math.abs(angle % 360) > 180.0f || Math.abs(angle % 360) <= 180.0f && Math.abs(angle % 360) > 90.0f) {    // collision TODO: imprecise?
+                if (Math.abs(angle % 360) <= 270.0f && Math.abs(angle % 360) > 180.0f || Math.abs(angle % 360) <= 180.0f && Math.abs(angle % 360) > 90.0f) {
                     // TODO: game over
                     mGameOverPolygon.scalingFactor = 0.9f;
                     mGameOverPolygon.draw(gl10);
@@ -116,9 +115,9 @@ public class Obstacle extends Shape{
             gl10.glLoadIdentity();   // reset the matrix to its default state
 
             if(!mIsShadow) {
-                GLU.gluLookAt(gl10, MainActivity.SENSOR_X * 2, 0.0f, 3.0f, MainActivity.SENSOR_X * 2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+                GLU.gluLookAt(gl10, MainActivity.SENSOR_Y * 2, 0.0f, 3.0f, MainActivity.SENSOR_Y * 2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
             }else{
-                GLU.gluLookAt(gl10, MainActivity.SENSOR_X+0.1f, 0.0f, 3.0f, MainActivity.SENSOR_X+0.1f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+                GLU.gluLookAt(gl10, MainActivity.SENSOR_Y +0.1f, 0.0f, 3.0f, MainActivity.SENSOR_Y +0.1f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
             }
             gl10.glTranslatef(0.0f, screenRatio - 1.0f, 0.0f);
             gl10.glRotatef(angle, 0.0f, 0.0f, 1.0f);

@@ -18,7 +18,7 @@ public class ObstacleSet {
 
         switch (setIndex){
             case 0:         // dependant on index, number of Obstacles being created for that very set
-                /*mObstacles = new Obstacle[]{
+                mObstacles = new Obstacle[]{
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 180.0f, 0.2f, false),
@@ -34,17 +34,17 @@ public class ObstacleSet {
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 270.0f, 0.2f, true),
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
-                };*/
-
-                mObstacles = new Obstacle[]{
-                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
                 };
 
-                mObstacleShadows = new Obstacle[]{
-                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
-                };
+//                mObstacles = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
+//                };
+//
+//                mObstacleShadows = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
+//                };
             case 1:
-                /*mObstacles = new Obstacle[]{
+                mObstacles = new Obstacle[]{
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 180.0f, 0.2f, false),
@@ -60,17 +60,17 @@ public class ObstacleSet {
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 270.0f, 0.2f, true),
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
-                };*/
-
-                mObstacles = new Obstacle[]{
-                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
                 };
 
-                mObstacleShadows = new Obstacle[]{
-                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
-                };
+//                mObstacles = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
+//                };
+//
+//                mObstacleShadows = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
+//                };
             case 2:
-                /*mObstacles = new Obstacle[]{
+                mObstacles = new Obstacle[]{
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
                         new Obstacle(screenRatio, 0.5f, theme.theme[1], 180.0f, 0.2f, false),
@@ -86,15 +86,15 @@ public class ObstacleSet {
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 270.0f, 0.2f, true),
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
-                };*/
-
-                mObstacles = new Obstacle[]{
-                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
                 };
 
-                mObstacleShadows = new Obstacle[]{
-                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
-                };
+//                mObstacles = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
+//                };
+//
+//                mObstacleShadows = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
+//                };
         }
         isAddRGBSet=false;
     }
@@ -149,13 +149,13 @@ public class ObstacleSet {
         }
 
         mObstacleShadows[0].draw(gl10, true);
-//        for(int i=1; i<mObstacleShadows.length; i++){
-//            mObstacleShadows[i].draw(gl10, mObstacles[i-1].offsetPermission);
-//        }
+        for(int i=1; i<mObstacleShadows.length; i++){
+            mObstacleShadows[i].draw(gl10, mObstacles[i-1].offsetPermission);
+        }
         mObstacles[0].draw(gl10, true);
-//        for(int i=1; i<mObstacles.length; i++){
-//            mObstacles[i].draw(gl10, mObstacles[i-1].offsetPermission);
-//        }
+        for(int i=1; i<mObstacles.length; i++){
+            mObstacles[i].draw(gl10, mObstacles[i-1].offsetPermission);
+        }
     }
 
     protected void updateColor(ColorTheme theme){

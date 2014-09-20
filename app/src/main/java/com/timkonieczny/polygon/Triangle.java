@@ -41,9 +41,9 @@ public class Triangle extends Shape {
 
         gl10.glLoadIdentity();   // reset the matrix to its default state
         if(!mIsShadow) {
-            GLU.gluLookAt(gl10, MainActivity.SENSOR_X * 2, 0.0f, 3.0f, MainActivity.SENSOR_X * 2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+            GLU.gluLookAt(gl10, MainActivity.SENSOR_Y * 2, 0.0f, 3.0f, MainActivity.SENSOR_Y * 2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         }else{
-            GLU.gluLookAt(gl10, MainActivity.SENSOR_X+0.1f, 0.0f, 3.0f, MainActivity.SENSOR_X+0.1f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+            GLU.gluLookAt(gl10, MainActivity.SENSOR_Y +0.1f, 0.0f, 3.0f, MainActivity.SENSOR_Y +0.1f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         }
         gl10.glTranslatef(0.0f, screenRatio -2.0f, 0.0f);
 //        gl10.glRotatef(90f,0.0f,0.0f,1.0f);
