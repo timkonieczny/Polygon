@@ -2,7 +2,6 @@ package com.timkonieczny.polygon;
 
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
-import android.util.Log;
 
 import java.util.Random;
 

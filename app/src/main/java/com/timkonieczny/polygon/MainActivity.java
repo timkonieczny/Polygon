@@ -15,8 +15,7 @@ public class MainActivity extends Activity implements SensorEventListener{
     private GLSurfaceView mGLSurfaceView;
     private SensorManager mSensorManager;
     protected static float SENSOR_Y;
-    private float[] mGravity,mGeomagnetic;
-    float prevRotation=0;
+    private Sensor mAccelerometer;
 
 
     @Override
@@ -24,6 +23,7 @@ public class MainActivity extends Activity implements SensorEventListener{
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer=mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mGLSurfaceView=new GameGLSurfaceView(this);
         setContentView(mGLSurfaceView);
     }
@@ -40,31 +40,13 @@ public class MainActivity extends Activity implements SensorEventListener{
 
     protected void onResume(){
         super.onResume();
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         mGLSurfaceView.onResume();
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            mGravity = event.values;
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            mGeomagnetic = event.values;
-        if (mGravity != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-
-            float orientation[] = new float[3];
-            SensorManager.getOrientation(R, orientation);
-            if(orientation[2]>prevRotation+0.007 || orientation[2]<prevRotation-0.007) {
-                float myFloat = orientation[2];
-                myFloat = (float)((int)( myFloat *1000f ))/1000f;
-                SENSOR_Y = myFloat/2;
-                prevRotation = orientation[2];
-            }
-        }
+        SENSOR_Y = event.values[0]/10;
     }
 
     @Override
