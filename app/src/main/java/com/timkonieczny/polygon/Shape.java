@@ -46,7 +46,7 @@ public class Shape {
         }
     }
 
-    public void initializeBuffers(float theme[]){
+    public void initializeBuffers(float[] theme){
         mVertexByteBuffer = ByteBuffer.allocateDirect(coords.length * 4);
         mVertexByteBuffer.order(ByteOrder.nativeOrder());
         vertexBuffer = mVertexByteBuffer.asFloatBuffer();

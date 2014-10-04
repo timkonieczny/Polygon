@@ -9,9 +9,7 @@ public class Triangle extends Shape {
     private final boolean mIsShadow;
     protected boolean isFading;
 
-    protected float[] theme;
-
-    public Triangle(float screenRatio, float[] theme, boolean isShadow) {
+    public Triangle(float screenRatio, float[] theme2, boolean isShadow) {
         super(screenRatio);
 
         coords = new float[]{
@@ -20,7 +18,7 @@ public class Triangle extends Shape {
          0.6f, -1.0f, 0.0f // bottom right
         };
 
-        initializeBuffers(theme);
+        initializeBuffers(theme2);
         mIsShadow=isShadow;
         isFading =false;
         isRGBFaded[0] = isRGBFaded[1] = isRGBFaded[2] =false;
