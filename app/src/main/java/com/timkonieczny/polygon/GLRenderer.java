@@ -47,7 +47,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         gl10.glViewport(0, 0, width, height);
         mScreenRatio =(float)height/width;
 
-        mThemes = new ColorTheme[]{
+        mThemes = new ColorTheme[]{ //TODO: testen: List<Integer> items = Collections.unmodifiableList(Arrays.asList(0,1,2,3));
                 new ColorTheme(
                         new float[]{0.20f, 0.71f, 0.91f, 1.00f},    // blue circle
                         new float[]{1.00f, 1.00f, 1.00f, 1.00f},    // white obstacle
@@ -87,7 +87,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         mPolygons=new Polygon[2];
 
         mPolygonThreads = new Thread[]{
-            new Thread(
+            new Thread( //TODO: ohne Threads testen
                 new Runnable(){
                     public void run(){
                         mPolygons[0]=new Polygon(mScreenRatio);
@@ -153,9 +153,15 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         mFirstFrame=true;
         innerCircleIndex = 0;
 
-        mTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[2],false);
-        mShadowTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[3],true);
-        mShadowTriangle.rgba=mThemes[outerThemeIndex].theme[3];
+        mTriangle = new Triangle(mScreenRatio, white,false);
+//        mShadowTriangle = new Triangle(mScreenRatio, mThemes[outerThemeIndex].theme[3],true);  // mThemes[outerThemeIndex].theme[3]
+        mShadowTriangle = new Triangle(mScreenRatio, new float[]{mThemes[outerThemeIndex].d0,mThemes[outerThemeIndex].d1, mThemes[outerThemeIndex].d2, mThemes[outerThemeIndex].d3},true);  // mThemes[outerThemeIndex].theme[3]
+
+        // TODO: ##################### This is where it changes the color ########################
+//        mShadowTriangle.rgba=mThemes[outerThemeIndex].theme[3];
+//        mShadowTriangle.rgba=new float[]{mThemes[outerThemeIndex].d0,mThemes[outerThemeIndex].d1, mThemes[outerThemeIndex].d2, mThemes[outerThemeIndex].d3};
+        // #######################################################################################
+
         mShadowTriangle.current=mShadowTriangle.rgba;
 
         mObstacleSetIndex=0;
@@ -163,6 +169,9 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onDrawFrame(GL10 gl10) {
+//        Log.d("blue",mThemes[0].theme[3][0]+" "+mThemes[0].theme[3][1]+" "+mThemes[0].theme[3][2]+" "+mThemes[0].theme[3][3]+" should be 0.00f 0.60f 0.80f 1.00f");
+//        Log.d("bluetest",mThemes[0].testTheme.get(3)[0]+" "+mThemes[0].testTheme.get(3)[1]+" "+mThemes[0].testTheme.get(3)[2]+" "+mThemes[0].testTheme.get(3)[3]+" should be 0.00f 0.60f 0.80f 1.00f");
+        Log.d("blue",mThemes[0].d0+" "+mThemes[0].d1+" "+mThemes[0].d2+" "+mThemes[0].d3+" should be "+mThemes[0].theme[3][0]+" "+mThemes[0].theme[3][1]+" "+mThemes[0].theme[3][2]+" "+mThemes[0].theme[3][3]);
         gl10.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         TSLF =SystemClock.elapsedRealtime()- mTimeBeforeDrawing;
         if(TSLF*0.001>0.3){      // fix for massive frame bumps right after onCreate() is being called
@@ -172,7 +181,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         if(!mFirstFrame) {
             mElapsedTime+= TSLF;
-            if (mElapsedTime >= 10000) {
+            if (mElapsedTime >= 5000) {
                 mElapsedTime = 0;
                 mPolygons[innerCircleIndex].isExpanded =false;
                 if(innerCircleIndex ==0) {
@@ -191,11 +200,15 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                     i.updateColor(mThemes[outerThemeIndex]);
                 }
 
-                mTriangle.updateColor(mThemes[outerThemeIndex].theme[2]);
-                mShadowTriangle.updateColor(mThemes[outerThemeIndex].theme[3]);
+//                mTriangle.updateColor(mThemes[outerThemeIndex].theme[2]);
+//                mShadowTriangle.updateColor(mThemes[outerThemeIndex].theme[3]);
 
-                mShadowTriangle.updateColor(white);
-                mShadowTriangle.rgba=mThemes[outerThemeIndex].theme[3];
+//                mShadowTriangle.updateColor(white);
+//                if(outerThemeIndex==0){
+//                    mShadowTriangle.rgba = new float[]{mThemes[outerThemeIndex].d0,mThemes[outerThemeIndex].d1, mThemes[outerThemeIndex].d2, mThemes[outerThemeIndex].d3};
+//                }else {
+                    mShadowTriangle.rgba = mThemes[outerThemeIndex].theme[3];
+//                }
                 mShadowTriangle.isFading=true;
 
             }
@@ -244,5 +257,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         while (innerThemeIndex==outerThemeIndex) {
             innerThemeIndex = random.nextInt(mThemes.length);
         }
+        Log.d("outerThemeIndex",""+outerThemeIndex);
+        Log.d("innerThemeIndex",""+innerThemeIndex);
     }
 }
