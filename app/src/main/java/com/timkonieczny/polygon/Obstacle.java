@@ -1,7 +1,6 @@
 package com.timkonieczny.polygon;
 
 import android.opengl.GLU;
-
 import javax.microedition.khronos.opengles.GL10;
 
 public class Obstacle extends Shape{
@@ -105,11 +104,7 @@ public class Obstacle extends Shape{
             }
 
             if(!mIsShadow&&scalingFactor>0.8f&&scalingFactor<1.0f) {
-                if (Math.abs(angle % 360) <= 270.0f && Math.abs(angle % 360) > 180.0f || Math.abs(angle % 360) <= 180.0f && Math.abs(angle % 360) > 90.0f) {
-                    // TODO: game over
-                    mGameOverPolygon.scalingFactor = 0.9f;
-                    mGameOverPolygon.draw(gl10);
-                }
+                collisionCheck(angle, gl10);
             }
 
             gl10.glLoadIdentity();   // reset the matrix to its default state
@@ -129,6 +124,21 @@ public class Obstacle extends Shape{
             gl10.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
             gl10.glVertexPointer(coordsPerVertex, GL10.GL_FLOAT, 0, vertexBuffer);
             gl10.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, (points));
+        }
+    }
+
+    private void collisionCheck(float angle, GL10 gl10){
+        float collisionAngle;
+        if(angle<0f){
+            collisionAngle =360-(Math.abs(angle)%360);
+        }else{
+            collisionAngle =angle%360;
+        }
+
+        if (collisionAngle >= 180.0f && collisionAngle < 270.0f) {
+            // TODO: game over
+            mGameOverPolygon.scalingFactor = 0.9f;
+            mGameOverPolygon.draw(gl10);
         }
     }
 }

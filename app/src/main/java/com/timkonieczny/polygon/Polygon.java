@@ -81,7 +81,7 @@ public class Polygon extends Shape{
         }
 
         if(scalingFactor<0.3f){
-            scalingFactor += GLRenderer.TSLF*0.001;
+            scalingFactor += GLRenderer.TSLF*0.0005;
             if(scalingFactor>3.0f){     //Fix for big frame bumps
                 scalingFactor=3.0f;
             }

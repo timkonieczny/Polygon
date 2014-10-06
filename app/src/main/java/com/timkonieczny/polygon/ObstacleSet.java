@@ -38,6 +38,16 @@ public class ObstacleSet {
 
 //                mObstacles = new Obstacle[]{
 //                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
+//                };
+//
+//                mObstacleShadows = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
+//                };
+//
+//                mObstacles = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
 //                };
 //
 //                mObstacleShadows = new Obstacle[]{
@@ -61,6 +71,16 @@ public class ObstacleSet {
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
                 };
+
+//                mObstacles = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
+//                };
+//
+//                mObstacleShadows = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
+//                };
 
 //                mObstacles = new Obstacle[]{
 //                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
@@ -88,6 +108,16 @@ public class ObstacleSet {
                         new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
                 };
 
+//                mObstacles = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 0.0f, 0.2f, false),
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
+//                };
+//
+//                mObstacleShadows = new Obstacle[]{
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 0.0f, 0.2f, true),
+//                        new Obstacle(screenRatio, 0.5f, theme.theme[3], 90.0f, 0.2f, true),
+//                };
+//
 //                mObstacles = new Obstacle[]{
 //                        new Obstacle(screenRatio, 0.5f, theme.theme[1], 90.0f, 0.2f, false),
 //                };
