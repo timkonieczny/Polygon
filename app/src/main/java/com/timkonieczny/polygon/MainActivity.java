@@ -16,6 +16,7 @@ public class MainActivity extends Activity implements SensorEventListener{
     private SensorManager mSensorManager;
     protected static float SENSOR_Y;
     private Sensor mAccelerometer;
+    private float rawData;
 
 
     @Override
@@ -46,11 +47,12 @@ public class MainActivity extends Activity implements SensorEventListener{
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        SENSOR_Y = event.values[0]/10;
+        rawData = rawData + 0.15f * (event.values[0] - rawData);    // low pass filter (adjustment with 0.15f value)
+
+        SENSOR_Y = rawData /10;
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 }
