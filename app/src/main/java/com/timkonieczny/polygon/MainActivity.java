@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 
@@ -49,7 +50,14 @@ public class MainActivity extends Activity implements SensorEventListener{
     public void onSensorChanged(SensorEvent event) {
         rawData = rawData + 0.15f * (event.values[0] - rawData);    // low pass filter (adjustment with 0.15f value)
 
-        SENSOR_Y = rawData /10;
+        if(rawData>5){
+            SENSOR_Y=0.5f;
+        }else if(rawData<-5){
+            SENSOR_Y=-0.5f;
+        }else{
+            SENSOR_Y = rawData /10;
+        }
+        Log.d("SENSOR_Y",""+SENSOR_Y);
     }
 
     @Override
