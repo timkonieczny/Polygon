@@ -14,7 +14,9 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
     private Thread[] mPolygonThreads, mObstacleSetThreads;
 
-    public static boolean SCREEN_TOUCHED;
+    protected static boolean START_NEW_GAME;
+    protected static boolean SCREEN_TOUCHED;
+    protected boolean mGameOverScreenTouched;
     protected static float X;              // OpenGL Coordinate System
     protected static float Y;
     protected static long TSLF;
@@ -34,6 +36,10 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     private int outerThemeIndex, innerThemeIndex;
 
     protected final float[] white= new float[]{1.0f,1.0f,1.0f,1.0f};
+
+    protected static boolean GAME_OVER=false;
+
+    private int mRefreshRate;
 
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
@@ -160,10 +166,13 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         mShadowTriangle.current=new float[]{mShadowTriangle.rgba[0],mShadowTriangle.rgba[1],mShadowTriangle.rgba[2],mShadowTriangle.rgba[3]};
 
         mObstacleSetIndex=0;
+
+        mRefreshRate=10000;
     }
 
     @Override
     public void onDrawFrame(GL10 gl10) {
+//        Log.d("tap",START_NEW_GAME+"");
         gl10.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         TSLF =SystemClock.elapsedRealtime()- mTimeBeforeDrawing;
         if(TSLF*0.001>0.3){      // fix for massive frame bumps right after onCreate() is being called
@@ -172,29 +181,61 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         mTimeBeforeDrawing=SystemClock.elapsedRealtime();
 
         if(!mFirstFrame) {
-            mElapsedTime+= TSLF;
-            if (mElapsedTime >= 5000) {
-                mElapsedTime = 0;
-                mPolygons[innerCircleIndex].isExpanded =false;
-                if(innerCircleIndex ==0) {
-                    innerCircleIndex = 1;
-                }else {
-                    innerCircleIndex =0;
+            mElapsedTime += TSLF;
+            if(!GAME_OVER) {
+                if (mElapsedTime >= mRefreshRate) {
+                    mElapsedTime = 0;
+                    mPolygons[innerCircleIndex].isExpanded = false;
+                    if (innerCircleIndex == 0) {
+                        innerCircleIndex = 1;
+                    } else {
+                        innerCircleIndex = 0;
+                    }
+
+                    chooseTheme();
+
+                    mPolygons[innerCircleIndex].scalingFactor = 0.0f;
+                    mPolygons[innerCircleIndex].updateColor(white);
+                    mPolygons[innerCircleIndex].rgba = mThemes[innerThemeIndex].theme[0];
+
+                    for (ObstacleSet i : mObstacleSets) {
+                        i.updateColor(mThemes[outerThemeIndex]);
+                    }
+
+                    mShadowTriangle.rgba = mThemes[outerThemeIndex].theme[3];
+                    mShadowTriangle.isFading = true;
+
                 }
+                START_NEW_GAME =false;
 
-                chooseTheme();
+                mGameOverScreenTouched =SCREEN_TOUCHED;
+            }else{
+                if(START_NEW_GAME) {
+                    SCREEN_TOUCHED= START_NEW_GAME=false;
+                    GAME_OVER=false;
+                    mElapsedTime = 0;
+                    mPolygons[innerCircleIndex].isExpanded = false;
+                    if (innerCircleIndex == 0) {
+                        innerCircleIndex = 1;
+                    } else {
+                        innerCircleIndex = 0;
+                    }
 
-                mPolygons[innerCircleIndex].scalingFactor=0.0f;
-                mPolygons[innerCircleIndex].updateColor(white);
-                mPolygons[innerCircleIndex].rgba=mThemes[innerThemeIndex].theme[0];
+                    chooseTheme();
 
-                for(ObstacleSet i: mObstacleSets){
-                    i.updateColor(mThemes[outerThemeIndex]);
+                    mPolygons[innerCircleIndex].scalingFactor = 0.0f;
+                    mPolygons[innerCircleIndex].updateColor(white);
+                    mPolygons[innerCircleIndex].rgba = mThemes[innerThemeIndex].theme[0];
+
+                    for (ObstacleSet i : mObstacleSets) {
+                        i.updateColor(mThemes[outerThemeIndex]);
+                    }
+
+                    mShadowTriangle.rgba = mThemes[outerThemeIndex].theme[3];
+                    mShadowTriangle.isFading = true;
+
+                    mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1].isExpanded=true;
                 }
-
-                mShadowTriangle.rgba = mThemes[outerThemeIndex].theme[3];
-                mShadowTriangle.isFading=true;
-
             }
         }else{
             mFirstFrame=false;

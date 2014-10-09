@@ -79,34 +79,37 @@ public class Obstacle extends Shape{
     }
 
     public void draw(GL10 gl10, boolean foreignOffsetPermission) {
-        if(GLRenderer.SCREEN_TOUCHED) {
-            if (GLRenderer.X <= 0) {
-                angle += GLRenderer.TSLF/2;
-            } else {
-                angle -= GLRenderer.TSLF/2;
+
+        if(!GLRenderer.GAME_OVER) {
+            if (GLRenderer.SCREEN_TOUCHED) {
+                if (GLRenderer.X <= 0) {
+                    angle += GLRenderer.TSLF / 2;
+                } else {
+                    angle -= GLRenderer.TSLF / 2;
+                }
             }
         }
-
         if (foreignOffsetPermission) {
-            if (scalingFactor < fullExpansion) {
-                if(GLRenderer.TSLF<100){
-                    scalingFactor += GLRenderer.TSLF*0.001;
-                }else{
-                    scalingFactor += 0.05;  // fix for big frame bumps
+            if(!GLRenderer.GAME_OVER) {
+                if (scalingFactor < fullExpansion) {
+                    if (GLRenderer.TSLF < 100) {
+                        scalingFactor += GLRenderer.TSLF * 0.001;
+                    } else {
+                        scalingFactor += 0.05;  // fix for big frame bumps
+                    }
+                    if (scalingFactor >= scalingOffset) {
+                        offsetPermission = true;
+                    }
+                } else {
+                    isExpanded = true;
+                    isRGBFaded[0] = isRGBFaded[1] = isRGBFaded[2] = false;
+                    isAddRGBSet = false;
                 }
-                if(scalingFactor>= scalingOffset){
-                    offsetPermission=true;
+
+                if (!mIsShadow && scalingFactor > 0.8f && scalingFactor < 1.0f) {
+                    collisionCheck(angle, gl10);
                 }
-            }else{
-                isExpanded =true;
-                isRGBFaded[0] = isRGBFaded[1] = isRGBFaded[2] =false;
-                isAddRGBSet =false;
             }
-
-            if(!mIsShadow&&scalingFactor>0.8f&&scalingFactor<1.0f) {
-                collisionCheck(angle, gl10);
-            }
-
             gl10.glLoadIdentity();   // reset the matrix to its default state
 
             if(!mIsShadow) {
@@ -137,6 +140,7 @@ public class Obstacle extends Shape{
 
         if (collisionAngle >= 180.0f && collisionAngle < 270.0f) {
             // TODO: game over
+            GLRenderer.GAME_OVER=true;
             mGameOverPolygon.scalingFactor = 0.9f;
             mGameOverPolygon.draw(gl10);
         }

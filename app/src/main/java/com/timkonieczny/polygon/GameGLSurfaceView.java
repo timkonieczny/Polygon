@@ -11,11 +11,12 @@ public class GameGLSurfaceView extends GLSurfaceView{
 
     private int mWidth;
     private int mHeight;
+    private GLRenderer renderer;
 
     public GameGLSurfaceView(Context context){
         super(context);
 
-        GLRenderer renderer = new GLRenderer();
+        renderer = new GLRenderer();
         setRenderer(renderer);
 
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -58,15 +59,20 @@ public class GameGLSurfaceView extends GLSurfaceView{
             }else{
                 GLRenderer.Y =1-(2* currentY /mHeight);
             }
-
             return true;
         }else {
             if(e.getActionMasked()==MotionEvent.ACTION_UP) {
                 GLRenderer.SCREEN_TOUCHED = false;
             }
+            if(GLRenderer.GAME_OVER) {
+                if(!renderer.mGameOverScreenTouched) {
+                    GLRenderer.START_NEW_GAME = true;
+                }else{
+                    renderer.mGameOverScreenTouched =false;
+                }
+            }
             return false;
         }
     }
-
-
 }
+
