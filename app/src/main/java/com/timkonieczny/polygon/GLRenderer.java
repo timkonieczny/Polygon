@@ -25,6 +25,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     private int mElapsedTime;
     private boolean mFirstFrame;
     private int innerCircleIndex, outerCircleIndex;
+    private int dontDrawObstacle;
 
     private Polygon[] mPolygons;
     private Polygon mNewGamePolygon;
@@ -224,12 +225,13 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                 mElapsedTime = 0;
                 if(START_NEW_GAME) {
                     SCREEN_TOUCHED= START_NEW_GAME=false;
-                    GAME_OVER=false;
-                    mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1].isExpanded=true;
+//                    GAME_OVER=false;
+//                    mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1].isExpanded=true;
                     mNewGamePolygon.isExpanded=false;
                     mPolygons[outerCircleIndex].isExpanded=false;
                     mPolygons[outerCircleIndex].scalingFactor=0.0f;
                     mNewGameAnimationFinished=false;
+                    dontDrawObstacle=0;
                 }
             }
         }else{
@@ -248,26 +250,6 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             mTimeBeforeDrawing=SystemClock.elapsedRealtime();
         }
 
-
-        if(!mNewGameAnimationFinished) {
-            if(!mNewGamePolygon.isExpanded){
-                mNewGamePolygon.draw(gl10);
-            }
-            if (mNewGamePolygon.isExpanded && !mPolygons[outerCircleIndex].isExpanded) {
-                mPolygons[outerCircleIndex].newGameDraw(gl10);
-                if(mPolygons[outerCircleIndex].isExpanded){
-                    mNewGameAnimationFinished=true;
-                }
-            }
-        }else {
-            mPolygons[outerCircleIndex].draw(gl10);
-        }
-
-        mPolygons[innerCircleIndex].draw(gl10);
-
-        mShadowTriangle.draw(gl10);
-        mTriangle.draw(gl10);
-
         if(mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1].isExpanded){
 
             mObstacleSets[mObstacleSetIndex].resetValues();
@@ -278,7 +260,39 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             }
         }
 
-        mObstacleSets[mObstacleSetIndex].draw(gl10);
+
+        if(!mNewGameAnimationFinished) {
+            if(!mNewGamePolygon.isExpanded){
+                if(dontDrawObstacle<mObstacleSets[mObstacleSetIndex].mObstacles.length&&mNewGamePolygon.scalingFactor*0.8f>=mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1-dontDrawObstacle].scalingFactor){
+                    dontDrawObstacle++;
+                }
+                mObstacleSets[mObstacleSetIndex].draw(gl10,dontDrawObstacle);
+                mNewGamePolygon.draw(gl10);
+            }
+            if (mNewGamePolygon.isExpanded && !mPolygons[outerCircleIndex].isExpanded) {
+                mPolygons[outerCircleIndex].newGameDraw(gl10);
+                if(mPolygons[outerCircleIndex].isExpanded){
+                    mNewGameAnimationFinished=true;
+                    GAME_OVER=false;
+                    mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1].isExpanded=true;
+                }
+            }
+
+            mPolygons[innerCircleIndex].draw(gl10);
+
+            mShadowTriangle.draw(gl10);
+            mTriangle.draw(gl10);
+
+            //mObstacleSets[mObstacleSetIndex].draw(gl10);
+        }else {
+            mPolygons[outerCircleIndex].draw(gl10);
+            mPolygons[innerCircleIndex].draw(gl10);
+
+            mShadowTriangle.draw(gl10);
+            mTriangle.draw(gl10);
+
+            mObstacleSets[mObstacleSetIndex].draw(gl10,0);
+        }
     }
 
     private void chooseTheme(){

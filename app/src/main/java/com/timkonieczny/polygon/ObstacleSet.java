@@ -169,7 +169,7 @@ public class ObstacleSet {
         }
     }
 
-    protected void draw(GL10 gl10){
+    protected void draw(GL10 gl10, int dontDraw){
         if(isFading) {
             if (!isRGBFaded[0] || !isRGBFaded[1] || !isRGBFaded[2]) {
                 fadeColor();
@@ -178,12 +178,17 @@ public class ObstacleSet {
             }
         }
 
-        mObstacleShadows[0].draw(gl10, true);
-        for(int i=1; i<mObstacleShadows.length; i++){
+        if(dontDraw<mObstacleShadows.length-1) {
+            mObstacleShadows[0].draw(gl10, true);
+        }
+        for(int i=1; i<mObstacleShadows.length-dontDraw; i++){
             mObstacleShadows[i].draw(gl10, mObstacles[i-1].offsetPermission);
         }
-        mObstacles[0].draw(gl10, true);
-        for(int i=1; i<mObstacles.length; i++){
+
+        if(dontDraw<mObstacles.length-1) {
+            mObstacles[0].draw(gl10, true);
+        }
+        for(int i=1; i<mObstacles.length-dontDraw; i++){
             mObstacles[i].draw(gl10, mObstacles[i-1].offsetPermission);
         }
     }
