@@ -15,6 +15,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     private Thread[] mPolygonThreads, mObstacleSetThreads;
 
     protected static boolean START_NEW_GAME;
+    private boolean mNewGameAnimationFinished=true;
     protected static boolean SCREEN_TOUCHED;
     protected boolean mGameOverScreenTouched;
     protected static float X;              // OpenGL Coordinate System
@@ -23,9 +24,10 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     private long mTimeBeforeDrawing;
     private int mElapsedTime;
     private boolean mFirstFrame;
-    private int innerCircleIndex;
+    private int innerCircleIndex, outerCircleIndex;
 
     private Polygon[] mPolygons;
+    private Polygon mNewGamePolygon;
     private Triangle mTriangle, mShadowTriangle;
     private ColorTheme[] mThemes;
     private ObstacleSet[] mObstacleSets;
@@ -108,6 +110,13 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                         mPolygons[1]=new Polygon(mScreenRatio, mThemes[outerThemeIndex].theme[0]);
                     }
                 }
+            ),
+            new Thread(
+                new Runnable(){
+                    public void run(){
+                        mNewGamePolygon=new NewGamePolygon(mScreenRatio, white);
+                    }
+                }
             )
         };
 
@@ -157,6 +166,7 @@ public class GLRenderer implements GLSurfaceView.Renderer{
         mElapsedTime=0;
         mFirstFrame=true;
         innerCircleIndex = 0;
+        outerCircleIndex = 1;
 
 
         mTriangle = new Triangle(mScreenRatio, white,false);
@@ -172,7 +182,6 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onDrawFrame(GL10 gl10) {
-//        Log.d("tap",START_NEW_GAME+"");
         gl10.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         TSLF =SystemClock.elapsedRealtime()- mTimeBeforeDrawing;
         if(TSLF*0.001>0.3){      // fix for massive frame bumps right after onCreate() is being called
@@ -188,8 +197,10 @@ public class GLRenderer implements GLSurfaceView.Renderer{
                     mPolygons[innerCircleIndex].isExpanded = false;
                     if (innerCircleIndex == 0) {
                         innerCircleIndex = 1;
+                        outerCircleIndex = 0;
                     } else {
                         innerCircleIndex = 0;
+                        outerCircleIndex = 1;
                     }
 
                     chooseTheme();
@@ -210,31 +221,15 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
                 mGameOverScreenTouched =SCREEN_TOUCHED;
             }else{
+                mElapsedTime = 0;
                 if(START_NEW_GAME) {
                     SCREEN_TOUCHED= START_NEW_GAME=false;
                     GAME_OVER=false;
-                    mElapsedTime = 0;
-                    mPolygons[innerCircleIndex].isExpanded = false;
-                    if (innerCircleIndex == 0) {
-                        innerCircleIndex = 1;
-                    } else {
-                        innerCircleIndex = 0;
-                    }
-
-                    chooseTheme();
-
-                    mPolygons[innerCircleIndex].scalingFactor = 0.0f;
-                    mPolygons[innerCircleIndex].updateColor(white);
-                    mPolygons[innerCircleIndex].rgba = mThemes[innerThemeIndex].theme[0];
-
-                    for (ObstacleSet i : mObstacleSets) {
-                        i.updateColor(mThemes[outerThemeIndex]);
-                    }
-
-                    mShadowTriangle.rgba = mThemes[outerThemeIndex].theme[3];
-                    mShadowTriangle.isFading = true;
-
                     mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1].isExpanded=true;
+                    mNewGamePolygon.isExpanded=false;
+                    mPolygons[outerCircleIndex].isExpanded=false;
+                    mPolygons[outerCircleIndex].scalingFactor=0.0f;
+                    mNewGameAnimationFinished=false;
                 }
             }
         }else{
@@ -253,13 +248,22 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             mTimeBeforeDrawing=SystemClock.elapsedRealtime();
         }
 
-        if(innerCircleIndex ==0) {
-            mPolygons[1].draw(gl10);
-            mPolygons[0].draw(gl10);
-        }else{
-            mPolygons[0].draw(gl10);
-            mPolygons[1].draw(gl10);
+
+        if(!mNewGameAnimationFinished) {
+            if(!mNewGamePolygon.isExpanded){
+                mNewGamePolygon.draw(gl10);
+            }
+            if (mNewGamePolygon.isExpanded && !mPolygons[outerCircleIndex].isExpanded) {
+                mPolygons[outerCircleIndex].newGameDraw(gl10);
+                if(mPolygons[outerCircleIndex].isExpanded){
+                    mNewGameAnimationFinished=true;
+                }
+            }
+        }else {
+            mPolygons[outerCircleIndex].draw(gl10);
         }
+
+        mPolygons[innerCircleIndex].draw(gl10);
 
         mShadowTriangle.draw(gl10);
         mTriangle.draw(gl10);

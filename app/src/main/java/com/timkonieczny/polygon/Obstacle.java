@@ -15,8 +15,6 @@ public class Obstacle extends Shape{
 
     private final boolean mIsShadow;
 
-    private Polygon mGameOverPolygon;
-
     public Obstacle(float screenRatio, float pieSize, float[] theme, float angleOffset, float scalingOffset, boolean isShadow){
         super(screenRatio);
         angleDefault=angleOffset;
@@ -65,8 +63,6 @@ public class Obstacle extends Shape{
 
         initializeBuffers(theme);
 
-        mGameOverPolygon = new Polygon(screenRatio,new float[]{0.0f,0.0f,0.0f,0.5f});
-
         mIsShadow=isShadow;
     }
 
@@ -107,7 +103,7 @@ public class Obstacle extends Shape{
                 }
 
                 if (!mIsShadow && scalingFactor > 0.8f && scalingFactor < 1.0f) {
-                    collisionCheck(angle, gl10);
+                    collisionCheck(angle);
                 }
             }
             gl10.glLoadIdentity();   // reset the matrix to its default state
@@ -130,7 +126,7 @@ public class Obstacle extends Shape{
         }
     }
 
-    private void collisionCheck(float angle, GL10 gl10){
+    private void collisionCheck(float angle){
         float collisionAngle;
         if(angle<0f){
             collisionAngle =360-(Math.abs(angle)%360);
@@ -141,8 +137,6 @@ public class Obstacle extends Shape{
         if (collisionAngle >= 180.0f && collisionAngle < 270.0f) {
             // TODO: game over
             GLRenderer.GAME_OVER=true;
-            mGameOverPolygon.scalingFactor = 0.9f;
-            mGameOverPolygon.draw(gl10);
         }
     }
 }

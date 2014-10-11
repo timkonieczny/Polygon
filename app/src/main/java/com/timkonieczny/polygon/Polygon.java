@@ -9,7 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Polygon extends Shape{
 
-    private int mPoints = 52;   // 50 vertices + center + first vertex as start and ending (2x)
+    protected int mPoints = 52;   // 50 vertices + center + first vertex as start and ending (2x)
     protected float[] theme;
 
     public Polygon(float screenRatio, float[] theme) {
@@ -87,6 +87,24 @@ public class Polygon extends Shape{
             }
         }
 
+        drawGL(gl10);
+    }
+
+    public void newGameDraw(GL10 gl10) {
+
+        if(!isExpanded) {
+            if (scalingFactor < fullExpansion) {
+                scalingFactor += GLRenderer.TSLF*0.005;
+            } else {
+                gl10.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+                isExpanded = true;
+            }
+        }
+
+        drawGL(gl10);
+    }
+
+    public void drawGL(GL10 gl10){
         gl10.glLoadIdentity();   // reset the matrix to its default state
         GLU.gluLookAt(gl10, MainActivity.SENSOR_Y *2, 0.0f, 3.0f, MainActivity.SENSOR_Y *2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 

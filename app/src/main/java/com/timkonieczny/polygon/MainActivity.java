@@ -57,7 +57,6 @@ public class MainActivity extends Activity implements SensorEventListener{
         }else{
             SENSOR_Y = rawData /10;
         }
-        Log.d("SENSOR_Y",""+SENSOR_Y);
     }
 
     @Override
