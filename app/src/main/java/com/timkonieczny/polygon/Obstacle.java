@@ -1,6 +1,7 @@
 package com.timkonieczny.polygon;
 
 import android.opengl.GLU;
+
 import javax.microedition.khronos.opengles.GL10;
 
 public class Obstacle extends Shape{
@@ -15,13 +16,18 @@ public class Obstacle extends Shape{
 
     private final boolean mIsShadow;
 
+    private float mOuterCollisionRadius;
+
+    private float mLastFrameScalingFactor = 0;
+
     public Obstacle(float screenRatio, float pieSize, float[] theme, float angleOffset, float scalingOffset, boolean isShadow){
-        super(screenRatio);
+        super(screenRatio);     // pieSize between 0 and 2
         angleDefault=angleOffset;
         scalingDefault=scalingOffset;
         points =(int)(pieSize*50);
         double innerRadius=1.0;
         double outerRadius=1.2;
+        mOuterCollisionRadius = 1f/1.2f;
 
         scalingFactor=0.0f;
 
@@ -88,11 +94,19 @@ public class Obstacle extends Shape{
         if (foreignOffsetPermission) {
             if(!GLRenderer.GAME_OVER) {
                 if (scalingFactor < fullExpansion) {
+
                     if (GLRenderer.TSLF < 100) {
                         scalingFactor += GLRenderer.TSLF * 0.001;
                     } else {
                         scalingFactor += 0.05;  // fix for big frame bumps
                     }
+
+                    if(mLastFrameScalingFactor<0.8333333f && 0.8333333f<scalingFactor){     // fix for imprecise collision detection due to frame bumps
+                        scalingFactor = 0.8333333f;
+                    }
+
+                    mLastFrameScalingFactor = scalingFactor;
+
                     if (scalingFactor >= scalingOffset) {
                         offsetPermission = true;
                     }
@@ -102,7 +116,7 @@ public class Obstacle extends Shape{
                     isAddRGBSet = false;
                 }
 
-                if (!mIsShadow && scalingFactor > 0.8f && scalingFactor < 1.0f) {
+                if (!mIsShadow && scalingFactor >= mOuterCollisionRadius && scalingFactor < 1.0f) {
                     collisionCheck(angle);
                 }
             }

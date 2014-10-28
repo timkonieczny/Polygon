@@ -263,8 +263,13 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
         if(!mNewGameAnimationFinished) {
             if(!mNewGamePolygon.isExpanded){
+
+
+                    // TODO: größeren Wert nehmen
+
+//                if(dontDrawObstacle<mObstacleSets[mObstacleSetIndex].mObstacles.length&&mNewGamePolygon.scalingFactor*0.8f>=mObstacleSets[mObstacleSetIndex].mObstacleShadows[mObstacleSets[mObstacleSetIndex].mObstacleShadows.length-1-dontDrawObstacle].scalingFactor){
                 if(dontDrawObstacle<mObstacleSets[mObstacleSetIndex].mObstacles.length&&mNewGamePolygon.scalingFactor*0.8f>=mObstacleSets[mObstacleSetIndex].mObstacles[mObstacleSets[mObstacleSetIndex].mObstacles.length-1-dontDrawObstacle].scalingFactor){
-                    dontDrawObstacle++;
+                    dontDrawObstacle++; // TODO: wenn schatten weiter außen als obstacle
                 }
                 mObstacleSets[mObstacleSetIndex].draw(gl10,dontDrawObstacle);
                 mNewGamePolygon.draw(gl10);
